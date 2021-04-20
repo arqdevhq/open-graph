@@ -7012,7 +7012,7 @@ md5.js@^1.3.4:
     inherits "^2.0.1"
     safe-buffer "^5.1.2"
 
-mdb-react-ui-kit@*:
+mdb-react-ui-kit:
   version "1.0.0-beta3"
   resolved "https://registry.yarnpkg.com/mdb-react-ui-kit/-/mdb-react-ui-kit-1.0.0-beta3.tgz#3997e9eb6ec893ef306e38542ae872e08e00ae86"
   integrity sha512-7jQa2wz7oa7CS/2526fs+aNhokGNvsy/DpboISvyCLen104jA/Kt5lnUjx4SfrcnLCamPOraia/QebVvVPw3XQ==
