@@ -8,6 +8,9 @@
   background-color: #F7F9FF;
   padding: 20px;
   padding-left: 30px !important;
+  height: 100vh;
+  width: 100vh;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
 }
 
 .input-field {
@@ -35,10 +38,17 @@
 
 #loading {
   display: none;
+  margin: 0 auto;
 }
 
 #image {
   width: 80%;
   height: 50%;
+  max-width: 500px;
+  max-height: 500px;
   margin-top: 20px;
+}
+
+.social-icon {
+  margin: 20px 5px;
 }

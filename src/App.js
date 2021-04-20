@@ -5,8 +5,8 @@ import request from 'request';
 
 // MDB react
 import { MDBRow, MDBCol } from 'mdb-react-ui-kit';
-import { MDBInput, MDBInputGroup, MDBBtn } from 'mdb-react-ui-kit';
-import { MDBIcon } from 'mdb-react-ui-kit';
+import { MDBInput, MDBInputGroup } from 'mdb-react-ui-kit';
+import { MDBIcon, MDBBtn } from 'mdbreact';
 
 class App extends React.Component {
   constructor(props) {
@@ -51,6 +51,9 @@ class App extends React.Component {
       if (response) {
         console.log('statusCode:', response && response.statusCode); 
         loader.style.display = "none";
+        if (response.statusCode === 401) {
+          alert('Invalid URL');
+        }
       }
       console.log('body:', body); // Print the HTML for the homepage.
       data = JSON.parse(body);
@@ -73,7 +76,7 @@ class App extends React.Component {
               <MDBInput value={this.state.link} onChange={this.onChange} label='Destination URL' type='url' />
               <MDBBtn outline onClick={this.onSubmit}>Submit</MDBBtn>
             </MDBInputGroup>
-            <div className="spinner-grow text-primary" id="loading" role="status">
+            <div className="spinner-border" id="loading" role="status">
               <span className="sr-only">Loading...</span>
             </div>
             <MDBInput value={this.state.title} className='input-field' label='Title' type='text' />
@@ -85,24 +88,24 @@ class App extends React.Component {
           </MDBCol>
           <MDBCol md='6' className='right-col'>
             <h1>Show Preview</h1>
-            <MDBBtn size="lg" tag="a" floating social="fb">
-              <MDBIcon fab icon="facebook-f" />
-            </MDBBtn>
-            <MDBBtn size="lg" tag="a" floating social="tw">
-              <MDBIcon fab icon="twitter" />
-            </MDBBtn>
-            <MDBBtn size="lg" tag="a" floating social="ins">
-              <MDBIcon fab icon="instagram" />
-            </MDBBtn>
-            <MDBBtn size="lg" tag="a" floating social="li">
-              <MDBIcon fab icon="linkedin-in" />
-            </MDBBtn>
-            <MDBBtn size="lg" tag="a" floating social="pin">
-              <MDBIcon fab icon="pinterest" />
-            </MDBBtn>
-            <MDBBtn size="lg" tag="a" floating social="slack">
-              <MDBIcon fab icon="slack" />
-            </MDBBtn>
+              <MDBBtn size="lg" tag="a" floating social="fb" className='social-icon'>
+                <MDBIcon fab icon="facebook-f" />
+              </MDBBtn>
+              <MDBBtn size="lg" tag="a" floating social="tw" className='social-icon'>
+                <MDBIcon fab icon="twitter" />
+              </MDBBtn>
+              <MDBBtn size="lg" tag="a" floating social="ins" className='social-icon'>
+                <MDBIcon fab icon="instagram" />
+              </MDBBtn>
+              <MDBBtn size="lg" tag="a" floating social="li" className='social-icon'>
+                <MDBIcon fab icon="linkedin-in" />
+              </MDBBtn>
+              <MDBBtn size="lg" tag="a" floating social="pin" className='social-icon'>
+                <MDBIcon fab icon="pinterest" />
+              </MDBBtn>
+              <MDBBtn size="lg" tag="a" floating social="slack" className='social-icon'>
+                <MDBIcon fab icon="slack" />
+              </MDBBtn>
           </MDBCol>
         </MDBRow>
         
