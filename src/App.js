@@ -80,7 +80,7 @@ class App extends React.Component {
             <MDBInput value={this.state.description} className='input-field' label='Description' textarea rows={4} />
             <div className="text-center">
               <h5>Image</h5>
-              <img src={this.state.image} alt='Image does not exist' id='image'></img>
+              <img src={this.state.image} alt=' does not exist' id='image'></img>
             </div>
           </MDBCol>
           <MDBCol md='6' className='right-col'>
