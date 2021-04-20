@@ -1,6 +1,7 @@
 .left-col {
   padding: 20px;
   padding-left: 30px !important;
+  padding-right: 20px !important;
 }
 
 .right-col {
@@ -11,6 +12,25 @@
 
 .input-field {
   margin-block: 30px;
+}
+
+.input-group .form-outline {
+  width: 85%;
+}
+@media only screen and (max-width: 1300px) {
+  .input-group .form-outline {
+    width: 80%;
+  }
+}
+@media only screen and (max-width: 992px) {
+  .input-group .form-outline {
+    width: 75%;
+  }
+}
+@media only screen and (max-width: 800px) {
+  .input-group .form-outline {
+    width: 70%;
+  }
 }
 
 #loading {
