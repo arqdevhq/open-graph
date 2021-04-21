@@ -14,10 +14,12 @@ class App extends React.Component {
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onShortUrlSubmit = this.onShortUrlSubmit.bind(this);
     this.state = {
       link: "",
       title: "",
       description: "",
+      generated_short_url: "",
       image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1053&q=80"
     };
   }
@@ -64,7 +66,46 @@ class App extends React.Component {
       });
     });
   }
-  
+
+  onShortUrlSubmit(event) {
+    event.preventDefault();
+
+    let loader = document.getElementById('loading');
+    loader.style.display = "block";
+    var url = encodeURI(this.state.link);
+    console.log(url);
+    var data = [];
+    var that = this;
+    
+    const formData = {
+      target: url,
+    };
+    var headerData = {}
+    // Kutt API link, replace localhost and port for desire value
+    // Kutt.it API docs https://docs.kutt.it/#tag/links/paths/~1links/post
+    const shortUrlAPI = 'http://localhost:3001/api/v2/links';
+    request.post({url: shortUrlAPI, form: formData, headers: headerData}, function (error, response, body) {
+      // Print the error if one occurred
+      if (error) {
+        console.error('error:', error); 
+      }
+      // Print the response status code if a response was received
+      if (response) {
+        console.log('statusCode:', response && response.statusCode); 
+        loader.style.display = "none";
+        if (response.statusCode === 401) {
+          alert('Invalid URL');
+        }
+      }
+      console.log('body:', body); // Print the HTML for the homepage.
+      data = JSON.parse(body);
+      that.setState({ 
+        description: body,
+        generated_short_url: data.link
+      });
+    });
+  }
+
   render() {
     return (
       <>
@@ -75,6 +116,7 @@ class App extends React.Component {
             <MDBInputGroup className='input-field'>
               <MDBInput value={this.state.link} onChange={this.onChange} label='Destination URL' type='url' />
               <MDBBtn outline onClick={this.onSubmit}>Submit</MDBBtn>
+              <MDBBtn onClick={this.onShortUrlSubmit}>Get Short Url</MDBBtn>
             </MDBInputGroup>
             <div className="spinner-border" id="loading" role="status">
               <span className="sr-only">Loading...</span>
@@ -84,6 +126,7 @@ class App extends React.Component {
             <div className="text-center">
               <h5>Image</h5>
               <img src={this.state.image} alt=' does not exist' id='image'></img>
+              <div>Short URL Result: {this.state.generated_short_url}</div>
             </div>
           </MDBCol>
           <MDBCol md='6' className='right-col'>
