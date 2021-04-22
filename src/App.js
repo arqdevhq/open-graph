@@ -1,4 +1,8 @@
 import React from 'react';
+// default image
+import coffee from './coffee.jpg';
+// no image available
+import none from './no_image.png';
 
 // http call
 import request from 'request';
@@ -18,7 +22,7 @@ class App extends React.Component {
       link: "",
       title: "",
       description: "",
-      image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1053&q=80",
+      image: coffee,
       domain: ""
     };
   }
@@ -37,7 +41,7 @@ class App extends React.Component {
     let loader = document.getElementById('loading');
     loader.style.display = "block";
     
-    var url = encodeURI(this.state.link);
+    var url = this.state.link;
     console.log(url);
 
     var data = [];
@@ -56,7 +60,7 @@ class App extends React.Component {
           alert('Invalid URL');
         }
       }
-      console.log('body:', body); // Print the HTML for the homepage.
+      console.log('body:', body);
       data = JSON.parse(body);
       that.setState({ 
         title: data.title,
@@ -64,6 +68,14 @@ class App extends React.Component {
         image: data.image,
         domain: data.domain
       });
+      if (!that.state.image) {
+        that.setState({ image: none });
+      }
+      if (!that.state.domain) {
+        var temp = document.createElement ('a');
+        temp.href = url;
+        that.setState({ domain: temp.hostname });
+      }
     });
   }
   
@@ -114,7 +126,7 @@ class App extends React.Component {
               <div className='preview-list'>
                 <h5>Facebook</h5>  
                 <div id='facebook-card'>
-                  <img id='facebook-image' src={this.state.image}></img>
+                  <img id='facebook-image' src={this.state.image} alt='facebook'></img>
                   <div id='facebook-text'>
                     <div id='facebook-link'>{this.state.domain}</div>
                     <div id='facebook-content'>
