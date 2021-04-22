@@ -1,14 +1,13 @@
 .left-col {
   padding: 20px;
-  padding-left: 30px !important;
-  padding-right: 20px !important;
+  padding-left: 40px !important;
+  padding-right: 30px !important;
 }
 
 .right-col {
   background-color: #F7F9FF;
   padding: 20px;
-  padding-left: 30px !important;
-  height: 100vh;
+  padding-left: 40px !important;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
 }
 
@@ -19,17 +18,17 @@
 .input-group .form-outline {
   width: 85%;
 }
-@media only screen and (max-width: 1300px) {
+@media only screen and (max-width: 1350px) {
   .input-group .form-outline {
     width: 80%;
   }
 }
-@media only screen and (max-width: 992px) {
+@media only screen and (max-width: 1050px) {
   .input-group .form-outline {
     width: 75%;
   }
 }
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 875px) {
   .input-group .form-outline {
     width: 70%;
   }
@@ -48,6 +47,225 @@
   margin-top: 20px;
 }
 
+#social-container {
+  margin-block: 20px;
+}
+
 .social-icon {
-  margin: 20px 5px;
+  margin: 10px 10px;
+}
+
+#social-preview {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-list {
+  width: 100%;
+  transition: all .5s ease;
+  padding: 8px;
+  margin-top: calc(1.75em - 8px);
+}
+
+#facebook-card {
+  margin-top: 10px;
+  border: 1px solid #dadde1;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  overflow: hidden;
+  font-size: 14px;
+  max-width: 527px;
+}
+
+#facebook-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  max-height: 274px;
+}
+
+#facebook-text {
+  width: 100%;
+  height: 80px;
+  border-top: 1px solid #dadde1;
+  padding: 10px 12px;
+  color: #1d2129;
+  background: #f2f3f5;
+}
+
+#facebook-link {
+  color: #606770;
+  height: 11px;
+  line-height: 11px;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border-collapse: separate;
+  direction: ltr;
+  display: block;
+  font-family: Helvetica,Arial,sans-serif;
+  font-size: 12px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  text-align: left;
+  user-select: none;
+  word-wrap: break-word;
+  -webkit-border-horizontal-spacing: 0;
+  -webkit-border-vertical-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+#facebook-content {
+  color: #4b4f56;
+  height: 46px;
+  line-height: 14.4px;
+  max-height: 46px;
+  border-collapse: separate;
+  direction: ltr;
+  display: block;
+  font-family: Helvetica,Arial,sans-serif;
+  font-size: 12px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  text-align: left;
+  user-select: none;
+  word-wrap: break-word;
+  -webkit-border-horizontal-spacing: 0;
+  -webkit-border-vertical-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  margin-top: 5px;
+}
+
+#facebook-title {
+  color: #1d2129;
+  display: inline;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-decoration-color: #1d2129;
+  text-decoration-line: none;
+  text-decoration-style: solid;
+  transition-delay: 0s;
+  transition-duration: .1s;
+  transition-property: color;
+  transition-timing-function: ease-in-out;
+  white-space: normal;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+#facebook-description {
+  color: #606770;
+  display: -webkit-box;
+  font-size: 14px;
+  height: 18px;
+  line-height: 20px;
+  margin-top: 3px;
+  max-height: 80px;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+@media only screen and (min-width: 770px) {
+  #twitter-card {
+    width: 506px;
+    border-radius: .42857em;
+    margin-left: 0;
+    overflow: hidden;
+  }
+  #twitter-image {
+    width: 504px;
+    height: 252px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    overflow: hidden;
+  }
+  #twitter-text {
+    padding: .75em 1em;
+  }
+  #twitter-title {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 1em;
+    line-height: 1.3em;
+    max-height: 1.3em;
+  }
+  #twitter-description {
+    display: -webkit-box;
+  }  
+  #twitter-link {
+    margin-top: .32333em;
+    color: #8899a6;
+  }
+}
+
+#twitter-card {
+  cursor: pointer;
+  display: block;
+  background-color: #fff;
+  border-radius: 14px;
+  border: 1px solid #e1e8ed;
+  margin-top: 10px;
+  font-size: 15px;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#twitter-image {
+  background-size: cover;
+  background-color: #e1e8ed;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  border-style: solid;
+  border-color: inherit;
+  border-width: 0 0 1px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  overflow: hidden;
+}
+
+#twitter-text {
+  padding: .75em 1em;
+}
+
+#twitter-title {
+  display: block;
+  margin: 0 0 .15em;
+  font-size: 15px;
+  line-height: 18.375px;
+  letter-spacing: normal;
+  overflow: hidden;
+  color: #14171a;
+}
+
+#twitter-description {
+  height: 2.6em;
+  max-height: 2.6em;
+  margin-top: .32333em;
+  line-height: 1.3em;
+  letter-spacing: normal;
+  word-wrap: break-word;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  color: #657786;
+}
+
+#twitter-link {
+  display: block;
+  color: #657786;
+  text-transform: lowercase;
+  line-height: 1.3125;
+  letter-spacing: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

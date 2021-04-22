@@ -18,7 +18,8 @@ class App extends React.Component {
       link: "",
       title: "",
       description: "",
-      image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1053&q=80"
+      image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1053&q=80",
+      domain: ""
     };
   }
 
@@ -60,7 +61,8 @@ class App extends React.Component {
       that.setState({ 
         title: data.title,
         description: data.description,
-        image: data.image
+        image: data.image,
+        domain: data.domain
       });
     });
   }
@@ -88,6 +90,7 @@ class App extends React.Component {
           </MDBCol>
           <MDBCol md='6' className='right-col'>
             <h1>Show Preview</h1>
+            <div id='social-container'>
               <MDBBtn size="lg" tag="a" floating social="fb" className='social-icon'>
                 <MDBIcon fab icon="facebook-f" />
               </MDBBtn>
@@ -106,6 +109,33 @@ class App extends React.Component {
               <MDBBtn size="lg" tag="a" floating social="slack" className='social-icon'>
                 <MDBIcon fab icon="slack" />
               </MDBBtn>
+            </div>
+            <div id='social-preview'>
+              <div className='preview-list'>
+                <h5>Facebook</h5>  
+                <div id='facebook-card'>
+                  <img id='facebook-image' src={this.state.image}></img>
+                  <div id='facebook-text'>
+                    <div id='facebook-link'>{this.state.domain}</div>
+                    <div id='facebook-content'>
+                      <div id='facebook-title'>{this.state.title}</div>
+                      <div id='facebook-description'>{this.state.description}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className='preview-list'>
+                <h5>Twitter</h5>  
+                <div id='twitter-card'>
+                  <div id='twitter-image' style={{ backgroundImage:`url(${this.state.image})` }}></div>
+                  <div id='twitter-text'>
+                    <span id='twitter-title'>{this.state.title}</span>
+                    <span id='twitter-description'>{this.state.description}</span>
+                    <span id='twitter-link'>{this.state.link}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </MDBCol>
         </MDBRow>
         
