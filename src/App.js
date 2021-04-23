@@ -28,6 +28,16 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    // Trigger a submit button click on enter
+    var input = document.querySelector('.url');
+    input.addEventListener("keyup", function(event) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+
+        document.getElementById("submit-btn").click();
+      }
+    });
+
     // click icon to scroll to corresponding social media
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
@@ -126,7 +136,7 @@ class App extends React.Component {
             <h1>Create Preview</h1>
             <MDBInputGroup className='input-field'>
               <MDBInput value={this.state.link} onChange={this.onChange} className='url' label='Destination URL' type='url' />
-              <MDBBtn outline onClick={this.onSubmit}>Submit</MDBBtn>
+              <MDBBtn outline id='submit-btn' onClick={this.onSubmit}>Submit</MDBBtn>
             </MDBInputGroup>
             <div className="spinner-border" id="loading" role="status">
               <span className="sr-only">Loading...</span>
