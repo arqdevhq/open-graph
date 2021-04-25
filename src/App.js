@@ -56,7 +56,7 @@ class App extends React.Component {
 
     // generate link button
     document.getElementById('generate-btn').addEventListener('click', function() {
-      alert('work in progress');
+      alert('Generating link is not available yet.');
     });
   }
 
@@ -104,21 +104,35 @@ class App extends React.Component {
       if (response) {
         console.log('statusCode:', response && response.statusCode); 
         loader.style.display = "none";
-        if (response.statusCode === 401) {
+        if (response.statusCode === 401 || response.statusCode === 403) {
           alert('Invalid URL');
         }
       }
       console.log('body:', body);
       data = JSON.parse(body);
-      that.setState({ 
-        title: data.title,
-        description: data.description,
-        image: data.image,
-        domain: data.domain
-      });
-      if (!that.state.image) {
+      that.setState({ domain: data.domain });
+      // insert title data only if it exists to avoid error
+      if (data.title) {
+        that.setState({ title: data.title });
+      }
+      else {
+        that.setState({ title: "" });
+      }
+      // insert description data only if it exists to avoid error
+      if (data.description) {
+        that.setState({ description: data.description });
+      }
+      else {
+        that.setState({ description: "" });
+      }
+      // if image does not exist, show preset no image
+      if (!data.image) {
         that.setState({ image: none });
       }
+      else {
+        that.setState({ image: data.image });
+      }
+      // if domain does not exist, extract hostname from link
       if (!that.state.domain) {
         var temp = document.createElement ('a');
         temp.href = url;
