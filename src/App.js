@@ -18,12 +18,14 @@ class App extends React.Component {
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onGenerateUrl = this.onGenerateUrl.bind(this);
     this.state = {
       link: "",
       title: "",
       description: "",
       image: coffee,
-      domain: ""
+      domain: "",
+      generated_url:""
     };
   }
 
@@ -55,14 +57,46 @@ class App extends React.Component {
     });
 
     // generate link button
-    document.getElementById('generate-btn').addEventListener('click', function() {
-      alert('Generating link is not available yet.');
+    // document.getElementById('generate-btn').addEventListener('click', function() {
+    //   alert('Generating link is not available yet.');
+    // });
+  }
+
+  onGenerateUrl(event) {
+    event.preventDefault();
+    var url = encodeURI(this.state.link);
+    var that = this;
+    const options = {
+      method: 'POST',
+      url: 'http://app.local:8080/rest/v2/short-urls',          // Shlink API Url
+      headers: {
+        'content-type': 'application/json;charset=UTF-8',
+        'X-Api-Key': '0637d4e0-adef-48f2-a64e-25974f9774a1',     // Shlink API key
+        // useQueryString: true
+      },
+      form: {'findIfExists': false, 'longUrl': url, 'validateUrl': false}
+    };
+    
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+      if (response) {
+        console.log('statusCode:', response && response.statusCode); 
+        var data = JSON.parse(body);
+        if (response.statusCode === 400) {
+          alert(data.detail);
+        }else {
+          that.setState({ 
+            generated_url: data.shortUrl
+          });
+        }
+        console.log(body);
+      }
     });
   }
 
   onChange(event) {
     if (event.target.classList.contains('url')) {
-      this.setState({ link: event.target.value });
+      this.setState({ link: event.target.value, generated_url:'' });
     }
     else if (event.target.classList.contains('title')) {
       this.setState({ title: event.target.value });
@@ -168,10 +202,16 @@ class App extends React.Component {
                 <MDBIcon icon="upload" className='px-1'/>
                 Upload Image
               </MDBBtn>
-              <MDBBtn rounded id='generate-btn' className='m-4'>
+              <MDBBtn rounded id='generate-btn' onClick={this.onGenerateUrl} className='m-4'>
                 <MDBIcon icon="link" className='px-1'/>
                 Generate Link
               </MDBBtn>
+              {this.state.generated_url!=''
+                ? (
+                  <MDBInput value={this.state.generated_url} className='form-control' label='Generated URL' type='url' />
+                )
+                : null
+              }
             </div>
           </MDBCol>
           <MDBCol md='6' className='right-col'>
