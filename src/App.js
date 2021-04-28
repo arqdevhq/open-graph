@@ -68,10 +68,10 @@ class App extends React.Component {
     var that = this;
     const options = {
       method: 'POST',
-      url: 'http://app.local:8080/rest/v2/short-urls',          // Shlink API Url
+      url: 'https://api.lookl.ink/rest/v2/short-urls',          // Shlink API Url
       headers: {
         'content-type': 'application/json;charset=UTF-8',
-        'X-Api-Key': '0637d4e0-adef-48f2-a64e-25974f9774a1',     // Shlink API key
+        'X-Api-Key': '91298336-be43-47ee-8f4e-9c19f4fa726a',     // Shlink API key
         // useQueryString: true
       },
       form: {'findIfExists': false, 'longUrl': url, 'validateUrl': false}
