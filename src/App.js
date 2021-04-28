@@ -71,7 +71,7 @@ class App extends React.Component {
       url: 'https://api.lookl.ink/rest/v2/short-urls',          // Shlink API Url
       headers: {
         'content-type': 'application/json;charset=UTF-8',
-        'X-Api-Key': '91298336-be43-47ee-8f4e-9c19f4fa726a',     // Shlink API key
+        'X-Api-Key': '067fc2fa-3161-45d5-a67c-298de89e39d9',     // Shlink API key
         // useQueryString: true
       },
       form: {'findIfExists': false, 'longUrl': url, 'validateUrl': false}
