@@ -18,12 +18,14 @@ class App extends React.Component {
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.generateLink = this.generateLink.bind(this);
     this.state = {
       link: "",
       title: "",
       description: "",
       image: coffee,
-      domain: ""
+      domain: "",
+      meta: ""
     };
   }
 
@@ -52,11 +54,6 @@ class App extends React.Component {
     // upload image button
     document.getElementById('upload-btn').addEventListener('click', function() {
       document.getElementById('file').click();
-    });
-
-    // generate link button
-    document.getElementById('generate-btn').addEventListener('click', function() {
-      alert('Generating link is not available yet.');
     });
   }
 
@@ -140,6 +137,44 @@ class App extends React.Component {
       }
     });
   }
+
+  generateLink() {
+
+    let html = 
+      '<!DOCTYPE html>'+
+      '<html>'+
+        '<head>'+
+          '<!-- Primary Meta Tags -->'+
+          // '<title></title>'+
+          '<meta name="title" content='+ this.state.title +'/>'+
+          '<meta name="description" content='+ this.state.description +'/>'+
+      
+          '<!-- Open Graph / Facebook -->'+
+          '<meta property="og:type" content="website" />'+
+          '<meta property="og:title" content='+ this.state.title +'/>'+
+          '<meta property="og:site_name" content='+ this.state.domain +'>'+
+          '<meta property="og:description" content='+ this.state.description +'/>'+
+          '<meta property="og:image" content='+ this.state.image +'/>'+
+      
+          '<!-- Twitter -->'+
+          '<meta property="twitter:card" content="summary_large_image" />'+
+          '<meta property="twitter:url" content='+ this.state.link+'/>'+
+          '<meta property="twitter:title" content='+ this.state.title +'/>'+
+          '<meta property="twitter:description" content='+ this.state.description +'/>'+
+          '<meta property="twitter:image" content='+ this.state.image +'/>'+
+
+          // maybe "no cors" api in the script tag
+          // '<script></script>'+
+        '</head>'+
+        '<body></body>'+
+      '</html>'
+    ;
+
+    this.setState({ meta: html }, function() {
+      console.log(this.state.meta);
+      alert(this.state.meta);
+    });
+  }
   
   render() {
     return (
@@ -168,7 +203,7 @@ class App extends React.Component {
                 <MDBIcon icon="upload" className='px-1'/>
                 Upload Image
               </MDBBtn>
-              <MDBBtn rounded id='generate-btn' className='m-4'>
+              <MDBBtn rounded className='m-4' onClick={this.generateLink}>
                 <MDBIcon icon="link" className='px-1'/>
                 Generate Link
               </MDBBtn>
