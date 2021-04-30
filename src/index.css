@@ -617,10 +617,6 @@
   margin: 5px 15px 0px 15px;
 }
 
-.card-image {
-  height: 250px !important;
-}
-
 @keyframes fade {
   0% {
       opacity: 0;
