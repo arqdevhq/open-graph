@@ -10,7 +10,7 @@ import request from 'request';
 // MDB react
 import { MDBRow, MDBCol } from 'mdb-react-ui-kit';
 import { MDBInput, MDBInputGroup, MDBIcon } from 'mdb-react-ui-kit';
-import { MDBBtn } from "mdbreact";
+import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText } from "mdbreact";
 
 class App extends React.Component {
   constructor(props) {
@@ -19,13 +19,15 @@ class App extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.generateLink = this.generateLink.bind(this);
+    this.removeLink = this.removeLink.bind(this);
     this.state = {
       link: "",
       title: "",
       description: "",
       image: coffee,
       domain: "",
-      meta: ""
+      meta: "",
+      card: []
     };
   }
 
@@ -54,6 +56,12 @@ class App extends React.Component {
     // upload image button
     document.getElementById('upload-btn').addEventListener('click', function() {
       document.getElementById('file').click();
+    });
+
+    // create new link
+    document.getElementById('create-btn').addEventListener('click', function() {
+      document.querySelector('.dashboard').style.display = 'none';
+      document.querySelector('.builder').style.display = 'block';
     });
   }
 
@@ -138,8 +146,9 @@ class App extends React.Component {
     });
   }
 
-  generateLink() {
+  generateLink = (element) => {
 
+    // OG metatags for backend
     let html = 
       '<!DOCTYPE html>'+
       '<html>'+
@@ -170,17 +179,84 @@ class App extends React.Component {
       '</html>'
     ;
 
-    this.setState({ meta: html }, function() {
+    // get today's date
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = mm + '/' + dd + '/' + yyyy;
+
+    let components = this.state.card;
+    let counter = 1;
+
+    element = 
+      <MDBCol key={counter} md="4" className='previewCard'>
+        <MDBCard cascade>
+          <MDBCardImage
+            cascade
+            className='img-fluid card-image'
+            overlay="white-light"
+            hover
+            src= {this.state.image}
+          />
+          <MDBCardBody cascade>
+            <MDBCardTitle contentEditable='true'>Click to make a title</MDBCardTitle>
+            <hr/>
+            <MDBCardText className='card-caption'>
+              <span className='card-label'>Title</span>
+              <span className='card-content'>{this.state.title}</span>
+              <span className='card-label'>Description</span>
+              <span className='card-content'>{this.state.description}</span>
+              <span className='card-label'>URL</span>
+              <span className='card-content'>{this.state.link}</span>
+              <span className='card-label'>Shorten Link</span>
+              <span className='card-content'>unavailable</span>
+            </MDBCardText>
+            <div className='text-center'>
+              <MDBBtn rounded className='card-btn'>
+                <MDBIcon far icon="copy" className='px-1'/>
+                Copy Link
+              </MDBBtn>
+              <MDBBtn rounded className='card-btn' onClick={this.removeLink}>
+                <MDBIcon far icon='trash-alt' className='px-1'/>
+                Delete Link
+              </MDBBtn>
+            </div>
+          </MDBCardBody>
+          <div className='rounded-bottom mdb-color lighten-3 text-center pt-3'>
+            <ul className='list-unstyled list-inline font-small'>
+              <li className='list-inline-item pr-2 white-text'>
+                <MDBIcon far icon='clock' /> {today}
+              </li>
+              <li className='list-inline-item blue-text pr-2'>
+                <MDBIcon far icon="hand-point-up" /> 0
+              </li>
+            </ul>
+          </div>
+        </MDBCard>
+      </MDBCol>
+
+    components.push(element);
+
+    this.setState({ meta: html, card: components }, function() {
       console.log(this.state.meta);
-      alert(this.state.meta);
+      document.querySelector('.builder').style.display = 'none';
+      document.querySelector('.dashboard').style.display = 'block';
+      counter++;
     });
+  }
+
+  removeLink(index) {
+    // let list = this.state.card;
+    // list.splice(index, 1);
+    // this.setState({ list });
   }
   
   render() {
     return (
       <>
         
-        <MDBRow>
+        <MDBRow className='builder'>
           <MDBCol md='6' className='left-col'>
             <h1>Create Preview</h1>
             <MDBInputGroup className='input-field'>
@@ -293,6 +369,18 @@ class App extends React.Component {
             </div>
           </MDBCol>
         </MDBRow>
+
+        <div className='dashboard'>
+          <MDBRow>
+            {this.state.card}
+          </MDBRow>
+          <div className='text-center full-height'>
+            <MDBBtn rounded id='create-btn' className='m-4'>
+              <MDBIcon icon="plus" className='px-1'/>
+              Create New
+            </MDBBtn>
+          </div>
+        </div>
         
       </>  
     );
