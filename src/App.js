@@ -27,7 +27,8 @@ class App extends React.Component {
       image: coffee,
       domain: "",
       meta: "",
-      card: []
+      card: [],
+      counter: 0
     };
   }
 
@@ -58,10 +59,16 @@ class App extends React.Component {
       document.getElementById('file').click();
     });
 
-    // create new link
+    // create new link button
     document.getElementById('create-btn').addEventListener('click', function() {
       document.querySelector('.dashboard').style.display = 'none';
       document.querySelector('.builder').style.display = 'block';
+    });
+
+    // back to dashboard button
+    document.getElementById('back-btn').addEventListener('click', function() {
+      document.querySelector('.builder').style.display = 'none';
+      document.querySelector('.dashboard').style.display = 'block';
     });
   }
 
@@ -146,7 +153,10 @@ class App extends React.Component {
     });
   }
 
-  generateLink = (element) => {
+  generateLink() {
+    if (this.state.card.length) {
+      document.querySelector('.dashboard').style.height = '100%';
+    }
 
     // OG metatags for backend
     let html = 
@@ -182,74 +192,64 @@ class App extends React.Component {
     // get today's date
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); 
     var yyyy = today.getFullYear();
     today = mm + '/' + dd + '/' + yyyy;
 
     let components = this.state.card;
-    let counter = 1;
 
-    element = 
-      <MDBCol key={counter} md="4" className='previewCard'>
-        <MDBCard cascade>
-          <MDBCardImage
-            cascade
-            className='img-fluid card-image'
-            overlay="white-light"
-            hover
-            src= {this.state.image}
-          />
-          <MDBCardBody cascade>
-            <MDBCardTitle contentEditable='true'>Click to make a title</MDBCardTitle>
-            <hr/>
-            <MDBCardText className='card-caption'>
-              <span className='card-label'>Title</span>
-              <span className='card-content'>{this.state.title}</span>
-              <span className='card-label'>Description</span>
-              <span className='card-content'>{this.state.description}</span>
-              <span className='card-label'>URL</span>
-              <span className='card-content'>{this.state.link}</span>
-              <span className='card-label'>Shorten Link</span>
-              <span className='card-content'>unavailable</span>
-            </MDBCardText>
-            <div className='text-center'>
-              <MDBBtn rounded className='card-btn'>
-                <MDBIcon far icon="copy" className='px-1'/>
-                Copy Link
-              </MDBBtn>
-              <MDBBtn rounded className='card-btn' onClick={this.removeLink}>
-                <MDBIcon far icon='trash-alt' className='px-1'/>
-                Delete Link
-              </MDBBtn>
-            </div>
-          </MDBCardBody>
-          <div className='rounded-bottom mdb-color lighten-3 text-center pt-3'>
-            <ul className='list-unstyled list-inline font-small'>
-              <li className='list-inline-item pr-2 white-text'>
-                <MDBIcon far icon='clock' /> {today}
-              </li>
-              <li className='list-inline-item blue-text pr-2'>
-                <MDBIcon far icon="hand-point-up" /> 0
-              </li>
-            </ul>
-          </div>
-        </MDBCard>
-      </MDBCol>
+    let element = 
+      <MDBCard cascade>
+        <MDBCardImage
+          cascade
+          className='img-fluid card-image'
+          overlay="white-light"
+          hover
+          src= {this.state.image}
+        />
+        <MDBCardBody cascade>
+          <MDBCardTitle contentEditable='true'>Click to make a title</MDBCardTitle>
+          <hr/>
+          <MDBCardText className='card-caption'>
+            <span className='card-label'>Title</span>
+            <span className='card-content'>{this.state.title}</span>
+            <span className='card-label'>Description</span>
+            <span className='card-content'>{this.state.description}</span>
+            <span className='card-label'>URL</span>
+            <span className='card-content'>{this.state.link}</span>
+            <span className='card-label'>Shorten Link</span>
+            <span className='card-content'>Unavailable</span>
+          </MDBCardText>
+        </MDBCardBody>
+        <div className='rounded-bottom mdb-color lighten-3 text-center pt-3'>
+          <ul className='list-unstyled list-inline font-small'>
+            <li className='list-inline-item pr-2 white-text'>
+              <MDBIcon far icon='clock' /> {today}
+            </li>
+            <li className='list-inline-item blue-text pr-2'>
+              <MDBIcon far icon="hand-point-up" /> 0
+            </li>
+          </ul>
+        </div>
+      </MDBCard>
 
     components.push(element);
 
-    this.setState({ meta: html, card: components }, function() {
+    this.setState({ meta: html, card: components, counter: this.state.counter+1 }, function() {
       console.log(this.state.meta);
       document.querySelector('.builder').style.display = 'none';
       document.querySelector('.dashboard').style.display = 'block';
-      counter++;
     });
   }
 
   removeLink(index) {
-    // let list = this.state.card;
-    // list.splice(index, 1);
-    // this.setState({ list });
+    let list = this.state.card;
+    list.splice(index, 1);
+    this.setState({ list });
+
+    if (!this.state.card.length) {
+      document.querySelector('.dashboard').style.height = '100vh';
+    }
   }
   
   render() {
@@ -258,7 +258,13 @@ class App extends React.Component {
         
         <MDBRow className='builder'>
           <MDBCol md='6' className='left-col'>
-            <h1>Create Preview</h1>
+            <div id='flex-header'>
+              <h1>Create Preview</h1>
+              <MDBBtn rounded className='m-2' id='back-btn'>
+                <MDBIcon icon="arrow-left" className='px-1'/>
+                Back to Dashboard
+              </MDBBtn>
+            </div>
             <MDBInputGroup className='input-field'>
               <MDBInput value={this.state.link} onChange={this.onChange} className='url' label='Destination URL' type='url' />
               <MDBBtn outline id='submit-btn' onClick={this.onSubmit}>Submit</MDBBtn>
@@ -372,7 +378,21 @@ class App extends React.Component {
 
         <div className='dashboard'>
           <MDBRow>
-            {this.state.card}
+            {this.state.card.map((item, index) =>
+              <MDBCol key={index} md="4" className='previewCard'>
+                {item}
+                <div className='text-center'>
+                  <MDBBtn rounded className='card-btn'>
+                    <MDBIcon far icon="copy" className='px-1'/>
+                    Copy Link
+                  </MDBBtn>
+                  <MDBBtn rounded className='card-btn' onClick={() => {this.removeLink(index)}}>
+                    <MDBIcon far icon='trash-alt' className='px-1'/>
+                    Delete Link
+                  </MDBBtn>
+                </div>
+              </MDBCol>
+            )}
           </MDBRow>
           <div className='text-center full-height'>
             <MDBBtn rounded id='create-btn' className='m-4'>
