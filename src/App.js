@@ -19,6 +19,7 @@ class App extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.generateLink = this.generateLink.bind(this);
+    this.copyLink = this.copyLink.bind(this);
     this.removeLink = this.removeLink.bind(this);
     this.state = {
       link: "",
@@ -27,6 +28,7 @@ class App extends React.Component {
       image: coffee,
       domain: "",
       meta: "",
+      short: "Unavailable",
       card: [],
       counter: 0
     };
@@ -218,7 +220,7 @@ class App extends React.Component {
             <span className='card-label'>URL</span>
             <span className='card-content'>{this.state.link}</span>
             <span className='card-label'>Shorten Link</span>
-            <span className='card-content'>Unavailable</span>
+            <span className='card-content shorten-link'>{this.state.short}</span>
           </MDBCardText>
         </MDBCardBody>
         <div className='rounded-bottom mdb-color lighten-3 text-center pt-3'>
@@ -240,6 +242,16 @@ class App extends React.Component {
       document.querySelector('.builder').style.display = 'none';
       document.querySelector('.dashboard').style.display = 'block';
     });
+  }
+
+  copyLink(index) {
+    var inner = document.querySelectorAll('.shorten-link')[index].innerHTML;
+    var input = document.createElement('input');
+    input.setAttribute('value', inner);
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('copy');
+    document.body.removeChild(input);
   }
 
   removeLink(index) {
@@ -382,7 +394,7 @@ class App extends React.Component {
               <MDBCol key={index} md="4" className='previewCard'>
                 {item}
                 <div className='text-center'>
-                  <MDBBtn rounded className='card-btn'>
+                  <MDBBtn rounded className='card-btn' onClick={() => {this.copyLink(index)}}>
                     <MDBIcon far icon="copy" className='px-1'/>
                     Copy Link
                   </MDBBtn>
