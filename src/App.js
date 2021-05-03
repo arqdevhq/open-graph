@@ -1,13 +1,11 @@
 import React from 'react';
 // default image
 import coffee from './coffee.jpg';
-// no image available
-import none from './no_image.png';
 
-// http call
+// HTTP call
 import request from 'request';
 
-// MDB react
+// MDB React
 import { MDBRow, MDBCol } from 'mdb-react-ui-kit';
 import { MDBInput, MDBInputGroup, MDBIcon } from 'mdb-react-ui-kit';
 import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText } from "mdbreact";
@@ -27,10 +25,8 @@ class App extends React.Component {
       description: "",
       image: coffee,
       domain: "",
-      meta: "",
       short: "Unavailable",
-      card: [],
-      counter: 0
+      card: []
     };
   }
 
@@ -104,10 +100,11 @@ class App extends React.Component {
     loader.style.display = "block";
     
     var url = this.state.link;
-    console.log(url);
+    console.log("Requested URL:", url);
 
     var data = [];
     var that = this;
+    var none = 'https://www.metrorollerdoors.com.au/wp-content/uploads/2018/02/unavailable-image.jpg';
 
     request('https://urlpreview.vercel.app/api/v1/preview?url='+url, function (error, response, body) {
       // Print the error if one occurred
@@ -116,13 +113,13 @@ class App extends React.Component {
       }
       // Print the response status code if a response was received
       if (response) {
-        console.log('statusCode:', response && response.statusCode); 
+        console.log('Status Code:', response && response.statusCode); 
         loader.style.display = "none";
         if (response.statusCode === 401 || response.statusCode === 403) {
           alert('Invalid URL');
         }
       }
-      console.log('body:', body);
+      // console.log('body:', body);
       data = JSON.parse(body);
       that.setState({ domain: data.domain });
       // insert title data only if it exists to avoid error
@@ -156,92 +153,103 @@ class App extends React.Component {
   }
 
   generateLink() {
+    document.getElementById('loader').style.display = "block";
     if (this.state.card.length) {
       document.querySelector('.dashboard').style.height = '100%';
     }
 
-    // OG metatags for backend
-    let html = 
-      '<!DOCTYPE html>'+
-      '<html>'+
-        '<head>'+
-          '<!-- Primary Meta Tags -->'+
-          // '<title></title>'+
-          '<meta name="title" content='+ this.state.title +'/>'+
-          '<meta name="description" content='+ this.state.description +'/>'+
-      
-          '<!-- Open Graph / Facebook -->'+
-          '<meta property="og:type" content="website" />'+
-          '<meta property="og:title" content='+ this.state.title +'/>'+
-          '<meta property="og:site_name" content='+ this.state.domain +'>'+
-          '<meta property="og:description" content='+ this.state.description +'/>'+
-          '<meta property="og:image" content='+ this.state.image +'/>'+
-      
-          '<!-- Twitter -->'+
-          '<meta property="twitter:card" content="summary_large_image" />'+
-          '<meta property="twitter:url" content='+ this.state.link+'/>'+
-          '<meta property="twitter:title" content='+ this.state.title +'/>'+
-          '<meta property="twitter:description" content='+ this.state.description +'/>'+
-          '<meta property="twitter:image" content='+ this.state.image +'/>'+
+    // REST API request for Shorten Link
+    let api_key = 'AIzaSyCXFHhZSAjh8v4D_QbET5Q_TaVxtVHlEn0';
+    let st = this.state.title;
+    let si = this.state.image;
+    let sd = this.state.description;
+    let domain = "https://voyagersocial.page.link";
+    let link = this.state.link;
 
-          // maybe "no cors" api in the script tag
-          // '<script></script>'+
-        '</head>'+
-        '<body></body>'+
-      '</html>'
-    ;
-
-    // get today's date
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); 
-    var yyyy = today.getFullYear();
-    today = mm + '/' + dd + '/' + yyyy;
-
-    let components = this.state.card;
-
-    let element = 
-      <MDBCard cascade>
-        <MDBCardImage
-          cascade
-          className='img-fluid card-image'
-          overlay="white-light"
-          hover
-          src= {this.state.image}
-        />
-        <MDBCardBody cascade>
-          <MDBCardTitle contentEditable='true'>Click to make a title</MDBCardTitle>
-          <hr/>
-          <MDBCardText className='card-caption'>
-            <span className='card-label'>Title</span>
-            <span className='card-content'>{this.state.title}</span>
-            <span className='card-label'>Description</span>
-            <span className='card-content'>{this.state.description}</span>
-            <span className='card-label'>URL</span>
-            <span className='card-content'>{this.state.link}</span>
-            <span className='card-label'>Shorten Link</span>
-            <span className='card-content shorten-link'>{this.state.short}</span>
-          </MDBCardText>
-        </MDBCardBody>
-        <div className='rounded-bottom mdb-color lighten-3 text-center pt-3'>
-          <ul className='list-unstyled list-inline font-small'>
-            <li className='list-inline-item pr-2 white-text'>
-              <MDBIcon far icon='clock' /> {today}
-            </li>
-            <li className='list-inline-item blue-text pr-2'>
-              <MDBIcon far icon="hand-point-up" /> 0
-            </li>
-          </ul>
-        </div>
-      </MDBCard>
-
-    components.push(element);
-
-    this.setState({ meta: html, card: components, counter: this.state.counter+1 }, function() {
-      console.log(this.state.meta);
-      document.querySelector('.builder').style.display = 'none';
-      document.querySelector('.dashboard').style.display = 'block';
+    var bodydata = JSON.stringify({ 
+      "dynamicLinkInfo": {
+        "domainUriPrefix": domain,
+        "link": link,
+        "socialMetaTagInfo": {
+          "socialTitle": st,
+          "socialDescription": sd,
+          "socialImageLink": si
+        }
+      },
+      "suffix": {
+        "option": "SHORT"
+      }
     });
+    
+    var url = "https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=" + api_key;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url , true);
+    xhr.setRequestHeader('Content-type', 'application/json');
+    const that = this;
+    xhr.onload = function () {
+      var data = JSON.parse(this.responseText);
+      var stlink = data.shortLink;
+      console.log("Shorten Link:" + stlink);
+      that.setState({ short: stlink }, setComponents);
+    };
+    xhr.send(bodydata);   
+
+    const setComponents = () => {
+      // get today's date
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+      var yyyy = today.getFullYear();
+      today = mm + '/' + dd + '/' + yyyy;
+
+      let components = this.state.card;
+      let short = this.state.short;
+      
+      let element = 
+        <MDBCard cascade>
+          <MDBCardImage
+            cascade
+            className='img-fluid card-image'
+            overlay="white-light"
+            hover
+            src= {si}
+          />
+          <MDBCardBody cascade>
+            <MDBCardTitle contentEditable='true'>Click to make a title</MDBCardTitle>
+            <hr/>
+            <MDBCardText className='card-caption'>
+              <span className='card-label'>Title</span>
+              <span className='card-content'>{st}</span>
+              <span className='card-label'>Description</span>
+              <span className='card-content'>{sd}</span>
+              <span className='card-label'>URL</span>
+              <span className='card-content'>{link}</span>
+              <span className='card-label'>Shorten Link</span>
+              <a href={short} target='_blank'>
+                <span className='card-content shorten-link'>{short}</span>
+              </a>
+            </MDBCardText>
+          </MDBCardBody>
+          <div className='rounded-bottom mdb-color lighten-3 text-center pt-3'>
+            <ul className='list-unstyled list-inline font-small'>
+              <li className='list-inline-item pr-2 white-text'>
+                <MDBIcon far icon='clock' /> {today}
+              </li>
+              <li className='list-inline-item blue-text pr-2'>
+                <MDBIcon far icon="hand-point-up" /> 0
+              </li>
+            </ul>
+          </div>
+        </MDBCard>
+
+      components.push(element);
+
+      this.setState({ card: components }, function () {
+        document.getElementById('loader').style.display = "none";
+        document.querySelector('.builder').style.display = 'none';
+        document.querySelector('.dashboard').style.display = 'block';
+      });
+    }
   }
 
   copyLink(index) {
@@ -290,6 +298,11 @@ class App extends React.Component {
             <MDBInput value={this.state.image} onChange={this.onChange} className='image' label='Image URL' type='url' />
             <div className="text-center">
               <img src={this.state.image || ""} alt=' does not exist' id='image'></img>
+            </div>
+            <div className="text-center" id="loader">
+              <div className="spinner-border" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
             </div>
             <div className="text-center">
               <input type="file" id="file" onChange={this.onChange} className='file' hidden></input>

@@ -82,6 +82,11 @@
   margin: 0 auto;
 }
 
+#loader {
+  display: none;
+  margin-top: 30px;
+}
+
 #image {
   width: 80%;
   height: 60%;
@@ -635,13 +640,20 @@ h5 {
   color: #57595D;
 }
 
-
 h5:after {
   content: '';
   border-top: 1px solid;
   margin: 0 0 0 10px;
   flex: 1 0 20px;
   color: #cccccc;
+}
+
+.shorten-link {
+  color: rgb(0, 66, 128);
+}
+
+.shorten-link:hover {
+  color: rgb(0, 109, 128);
 }
 
 @keyframes fade {
