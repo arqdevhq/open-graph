@@ -189,7 +189,7 @@ class App extends React.Component {
     xhr.onload = function () {
       var data = JSON.parse(this.responseText);
       var stlink = data.shortLink;
-      console.log("Shorten Link:" + stlink);
+      console.log("Shorten Link: " + stlink);
       that.setState({ short: stlink }, setComponents);
     };
     xhr.send(bodydata);   
