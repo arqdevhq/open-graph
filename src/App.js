@@ -26,11 +26,65 @@ class App extends React.Component {
       image: coffee,
       domain: "",
       short: "Unavailable",
-      card: []
+      card: [],
+      data: []
     };
   }
 
   componentDidMount() {
+    // load data from local storage
+    if (localStorage.length !== 0) {
+      for (var i = 0; i < localStorage.length; i++) {
+        let data = JSON.parse(localStorage.getItem(i));
+        let components = this.state.card;
+        let db = this.state.data;
+        let name = this.state.domain;
+        if (this.state.domain === "") {
+          name = "Untitled";
+        }
+        let element = 
+          <MDBCard cascade>
+            <MDBCardImage
+              cascade
+              className='img-fluid card-image'
+              overlay="white-light"
+              hover
+              src= {data[0]}
+            />
+            <MDBCardBody cascade>
+              <MDBCardTitle>{name}</MDBCardTitle>
+              <hr/>
+              <MDBCardText className='card-caption'>
+                <span className='card-label'>Title</span>
+                <span className='card-content'>{data[1]}</span>
+                <span className='card-label'>Description</span>
+                <span className='card-content'>{data[2]}</span>
+                <span className='card-label'>URL</span>
+                <span className='card-content'>{data[3]}</span>
+                <span className='card-label'>Shorten Link</span>
+                <a href={data[4]} target='_blank' rel="noreferrer">
+                  <span className='card-content shorten-link'>{data[4]}</span>
+                </a>
+              </MDBCardText>
+            </MDBCardBody>
+            <div className='rounded-bottom mdb-color lighten-3 text-center pt-3'>
+              <ul className='list-unstyled list-inline font-small'>
+                <li className='list-inline-item pr-2 white-text'>
+                  <MDBIcon far icon='clock' /> {data[5]}
+                </li>
+                <li className='list-inline-item blue-text pr-2'>
+                  <MDBIcon far icon="hand-point-up" /> 0
+                </li>
+              </ul>
+            </div>
+          </MDBCard>
+        
+        components.push(element);
+        db.push(JSON.stringify(data));
+        this.setState({ card: components, data: db });
+      }
+    }
+    
     // Trigger a submit button click on enter
     var input = document.querySelector('.url');
     input.addEventListener("keyup", function(event) {
@@ -203,7 +257,12 @@ class App extends React.Component {
       today = mm + '/' + dd + '/' + yyyy;
 
       let components = this.state.card;
+      let db = this.state.data;
       let short = this.state.short;
+      let name = this.state.domain;
+      if (this.state.domain === "") {
+        name = "Untitled";
+      }
       
       let element = 
         <MDBCard cascade>
@@ -215,7 +274,7 @@ class App extends React.Component {
             src= {si}
           />
           <MDBCardBody cascade>
-            <MDBCardTitle contentEditable='true'>Click to make a title</MDBCardTitle>
+            <MDBCardTitle>{name}</MDBCardTitle>
             <hr/>
             <MDBCardText className='card-caption'>
               <span className='card-label'>Title</span>
@@ -225,7 +284,7 @@ class App extends React.Component {
               <span className='card-label'>URL</span>
               <span className='card-content'>{link}</span>
               <span className='card-label'>Shorten Link</span>
-              <a href={short} target='_blank'>
+              <a href={short} target='_blank' rel="noreferrer">
                 <span className='card-content shorten-link'>{short}</span>
               </a>
             </MDBCardText>
@@ -243,8 +302,12 @@ class App extends React.Component {
         </MDBCard>
 
       components.push(element);
+      let arr = [si, st, sd, link, short, today];
+      db.push(JSON.stringify(arr));
+      // save card in local storage
+      localStorage.setItem(localStorage.length, JSON.stringify(arr));
 
-      this.setState({ card: components }, function () {
+      this.setState({ card: components, data: db }, function () {
         document.getElementById('loader').style.display = "none";
         document.querySelector('.builder').style.display = 'none';
         document.querySelector('.dashboard').style.display = 'block';
@@ -264,8 +327,16 @@ class App extends React.Component {
 
   removeLink(index) {
     let list = this.state.card;
+    let db = this.state.data;
     list.splice(index, 1);
-    this.setState({ list });
+    db.splice(index, 1);
+    // remove card in local storage
+    localStorage.clear();
+    db.forEach(function(elem, index) {
+      localStorage.setItem(index, elem);
+    });
+    
+    this.setState({ list, db });
 
     if (!this.state.card.length) {
       document.querySelector('.dashboard').style.height = '100vh';
