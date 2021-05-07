@@ -4,6 +4,10 @@ import coffee from './coffee.jpg';
 
 // HTTP call
 import request from 'request';
+// analytics api
+// import admin from 'firebase-admin';
+// import "firebase/auth";
+// import serviceAccount from './key';
 
 // MDB React
 import { MDBRow, MDBCol } from 'mdb-react-ui-kit';
@@ -20,6 +24,7 @@ class App extends React.Component {
     this.copyLink = this.copyLink.bind(this);
     this.removeLink = this.removeLink.bind(this);
     this.state = {
+      name: "",
       link: "",
       title: "",
       description: "",
@@ -32,16 +37,38 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    // Analytics API
+    // const credential = admin.credential.cert(serviceAccount);
+    // credential.getAccessToken();
+    // admin.initializeApp({credential: admin.credential.cert(serviceAccount)});
+    // const uid = 'some-uid';
+    // admin
+    //   .auth()
+    //   .createCustomToken(uid)
+    //   .then((customToken) => {
+    //     // Send token back to client
+    //     let access_token = customToken;
+    //     let url = "https://firebasedynamiclinks.googleapis.com/v1/https://voyagersocial.page.link/ubRU/linkStats?durationDays=7";
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open('GET', url , true);
+    //     xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
+    //     // const that = this;
+    //     xhr.onload = function () {
+    //       var data = JSON.parse(this.responseText);
+    //       console.log(data);
+    //     };
+    //     xhr.send(); 
+    //   })
+    //   .catch((error) => {
+    //     console.log('Error creating custom token:', error);
+    //   });
+    
     // load data from local storage
     if (localStorage.length !== 0) {
       for (var i = 0; i < localStorage.length; i++) {
         let data = JSON.parse(localStorage.getItem(i));
         let components = this.state.card;
         let db = this.state.data;
-        let name = this.state.domain;
-        if (this.state.domain === "") {
-          name = "Untitled";
-        }
         let element = 
           <MDBCard cascade>
             <MDBCardImage
@@ -49,28 +76,28 @@ class App extends React.Component {
               className='img-fluid card-image'
               overlay="white-light"
               hover
-              src= {data[0]}
+              src= {data[1]}
             />
             <MDBCardBody cascade>
-              <MDBCardTitle>{name}</MDBCardTitle>
+              <MDBCardTitle>{data[0]}</MDBCardTitle>
               <hr/>
               <MDBCardText className='card-caption'>
                 <span className='card-label'>Title</span>
-                <span className='card-content'>{data[1]}</span>
-                <span className='card-label'>Description</span>
                 <span className='card-content'>{data[2]}</span>
-                <span className='card-label'>URL</span>
+                <span className='card-label'>Description</span>
                 <span className='card-content'>{data[3]}</span>
+                <span className='card-label'>URL</span>
+                <span className='card-content'>{data[4]}</span>
                 <span className='card-label'>Shorten Link</span>
-                <a href={data[4]} target='_blank' rel="noreferrer">
-                  <span className='card-content shorten-link'>{data[4]}</span>
+                <a href={data[5]} target='_blank' rel="noreferrer">
+                  <span className='card-content shorten-link'>{data[5]}</span>
                 </a>
               </MDBCardText>
             </MDBCardBody>
             <div className='rounded-bottom mdb-color lighten-3 text-center pt-3'>
               <ul className='list-unstyled list-inline font-small'>
                 <li className='list-inline-item pr-2 white-text'>
-                  <MDBIcon far icon='clock' /> {data[5]}
+                  <MDBIcon far icon='clock' /> {data[6]}
                 </li>
                 <li className='list-inline-item blue-text pr-2'>
                   <MDBIcon far icon="hand-point-up" /> 0
@@ -137,6 +164,9 @@ class App extends React.Component {
     else if (event.target.classList.contains('image')) {
       this.setState({ image: event.target.value });
     }
+    else if (event.target.classList.contains('name')) {
+      this.setState({ name: event.target.value });
+    }
     else if (event.target.classList.contains('file')) {
       var reader = new FileReader();
       var that = this;
@@ -169,7 +199,7 @@ class App extends React.Component {
       if (response) {
         console.log('Status Code:', response && response.statusCode); 
         loader.style.display = "none";
-        if (response.statusCode === 401 || response.statusCode === 403) {
+        if (response.statusCode === 400 || response.statusCode === 401 || response.statusCode === 403) {
           alert('Invalid URL');
         }
       }
@@ -207,111 +237,118 @@ class App extends React.Component {
   }
 
   generateLink() {
-    document.getElementById('loader').style.display = "block";
-    if (this.state.card.length) {
-      document.querySelector('.dashboard').style.height = '100%';
+    if (this.state.name === "") {
+      alert('Type preview name');
+      document.querySelector('.name').focus();
     }
+    else if (this.state.image.length > 1000) {
+      alert('Image URL is too long');
+      document.querySelector('.image').focus();
+    }
+    else {
+      document.getElementById('loader').style.display = "block";
+      if (this.state.card.length) {
+        document.querySelector('.dashboard').style.height = '100%';
+      }
 
-    // REST API request for Shorten Link
-    let api_key = 'AIzaSyCXFHhZSAjh8v4D_QbET5Q_TaVxtVHlEn0';
-    let st = this.state.title;
-    let si = this.state.image;
-    let sd = this.state.description;
-    let domain = "https://voyagersocial.page.link";
-    let link = this.state.link;
+      // REST API request for Shorten Link
+      let api_key = 'AIzaSyCXFHhZSAjh8v4D_QbET5Q_TaVxtVHlEn0';
+      let st = this.state.title;
+      let si = this.state.image;
+      let sd = this.state.description;
+      let domain = "https://voyagersocial.page.link";
+      let link = this.state.link;
+      let name = this.state.name;
 
-    var bodydata = JSON.stringify({ 
-      "dynamicLinkInfo": {
-        "domainUriPrefix": domain,
-        "link": link,
-        "socialMetaTagInfo": {
-          "socialTitle": st,
-          "socialDescription": sd,
-          "socialImageLink": si
+      var bodydata = JSON.stringify({ 
+        "dynamicLinkInfo": {
+          "domainUriPrefix": domain,
+          "link": link,
+          "socialMetaTagInfo": {
+            "socialTitle": st,
+            "socialDescription": sd,
+            "socialImageLink": si
+          }
+        },
+        "suffix": {
+          "option": "SHORT"
         }
-      },
-      "suffix": {
-        "option": "SHORT"
-      }
-    });
-    
-    var url = "https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=" + api_key;
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', url , true);
-    xhr.setRequestHeader('Content-type', 'application/json');
-    const that = this;
-    xhr.onload = function () {
-      var data = JSON.parse(this.responseText);
-      var stlink = data.shortLink;
-      console.log("Shorten Link: " + stlink);
-      that.setState({ short: stlink }, setComponents);
-    };
-    xhr.send(bodydata);   
-
-    const setComponents = () => {
-      // get today's date
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, '0');
-      var mm = String(today.getMonth() + 1).padStart(2, '0'); 
-      var yyyy = today.getFullYear();
-      today = mm + '/' + dd + '/' + yyyy;
-
-      let components = this.state.card;
-      let db = this.state.data;
-      let short = this.state.short;
-      let name = this.state.domain;
-      if (this.state.domain === "") {
-        name = "Untitled";
-      }
-      
-      let element = 
-        <MDBCard cascade>
-          <MDBCardImage
-            cascade
-            className='img-fluid card-image'
-            overlay="white-light"
-            hover
-            src= {si}
-          />
-          <MDBCardBody cascade>
-            <MDBCardTitle>{name}</MDBCardTitle>
-            <hr/>
-            <MDBCardText className='card-caption'>
-              <span className='card-label'>Title</span>
-              <span className='card-content'>{st}</span>
-              <span className='card-label'>Description</span>
-              <span className='card-content'>{sd}</span>
-              <span className='card-label'>URL</span>
-              <span className='card-content'>{link}</span>
-              <span className='card-label'>Shorten Link</span>
-              <a href={short} target='_blank' rel="noreferrer">
-                <span className='card-content shorten-link'>{short}</span>
-              </a>
-            </MDBCardText>
-          </MDBCardBody>
-          <div className='rounded-bottom mdb-color lighten-3 text-center pt-3'>
-            <ul className='list-unstyled list-inline font-small'>
-              <li className='list-inline-item pr-2 white-text'>
-                <MDBIcon far icon='clock' /> {today}
-              </li>
-              <li className='list-inline-item blue-text pr-2'>
-                <MDBIcon far icon="hand-point-up" /> 0
-              </li>
-            </ul>
-          </div>
-        </MDBCard>
-
-      components.push(element);
-      let arr = [si, st, sd, link, short, today];
-      db.push(JSON.stringify(arr));
-      // save card in local storage
-      localStorage.setItem(localStorage.length, JSON.stringify(arr));
-
-      this.setState({ card: components, data: db }, function () {
-        document.getElementById('loader').style.display = "none";
-        document.querySelector('.builder').style.display = 'none';
-        document.querySelector('.dashboard').style.display = 'block';
       });
+      
+      var url = "https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=" + api_key;
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', url , true);
+      xhr.setRequestHeader('Content-type', 'application/json');
+      const that = this;
+      xhr.onload = function () {
+        var data = JSON.parse(this.responseText);
+        var stlink = data.shortLink;
+        console.log("Shorten Link: " + stlink);
+        that.setState({ short: stlink }, setComponents);
+      };
+      xhr.send(bodydata);   
+
+      const setComponents = () => {
+        // get today's date
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+        var yyyy = today.getFullYear();
+        today = mm + '/' + dd + '/' + yyyy;
+
+        let components = this.state.card;
+        let db = this.state.data;
+        let short = this.state.short;
+        
+        let element = 
+          <MDBCard cascade>
+            <MDBCardImage
+              cascade
+              className='img-fluid card-image'
+              overlay="white-light"
+              hover
+              src= {si}
+            />
+            <MDBCardBody cascade>
+              <MDBCardTitle>{name}</MDBCardTitle>
+              <hr/>
+              <MDBCardText className='card-caption'>
+                <span className='card-label'>Title</span>
+                <span className='card-content'>{st}</span>
+                <span className='card-label'>Description</span>
+                <span className='card-content'>{sd}</span>
+                <span className='card-label'>URL</span>
+                <span className='card-content'>{link}</span>
+                <span className='card-label'>Shorten Link</span>
+                <a href={short} target='_blank' rel="noreferrer">
+                  <span className='card-content shorten-link'>{short}</span>
+                </a>
+              </MDBCardText>
+            </MDBCardBody>
+            <div className='rounded-bottom mdb-color lighten-3 text-center pt-3'>
+              <ul className='list-unstyled list-inline font-small'>
+                <li className='list-inline-item pr-2 white-text'>
+                  <MDBIcon far icon='clock' /> {today}
+                </li>
+                <li className='list-inline-item blue-text pr-2'>
+                  <MDBIcon far icon="hand-point-up" /> 0
+                </li>
+              </ul>
+            </div>
+          </MDBCard>
+
+        components.push(element);
+        let arr = [name, si, st, sd, link, short, today];
+        db.push(JSON.stringify(arr));
+        // save card in local storage
+        localStorage.setItem(localStorage.length, JSON.stringify(arr));
+
+        this.setState({ card: components, data: db }, function () {
+          document.getElementById('loader').style.display = "none";
+          document.querySelector('.builder').style.display = 'none';
+          document.querySelector('.dashboard').style.display = 'block';
+        });
+      }
     }
   }
 
@@ -366,21 +403,24 @@ class App extends React.Component {
             <MDBInput value={this.state.title} onChange={this.onChange} className='input-field title' label='Title' type='text' />
             <MDBInput value={this.state.description} onChange={this.onChange} className='input-field description' 
             label='Description' textarea rows={4}/>
-            <MDBInput value={this.state.image} onChange={this.onChange} className='image' label='Image URL' type='url' />
             <div className="text-center">
               <img src={this.state.image || ""} alt=' does not exist' id='image'></img>
+            </div>
+            <div className="text-center" id='image-url'>
+              <MDBInput value={this.state.image} onChange={this.onChange} className='image' label='Image URL' type='url' />
+              <input type="file" id="file" onChange={this.onChange} className='file' hidden></input>
+              <MDBBtn rounded id='upload-btn' className='m-4'>
+                <MDBIcon icon="upload" className='px-1'/>
+                Upload Image
+              </MDBBtn>
             </div>
             <div className="text-center" id="loader">
               <div className="spinner-border" role="status">
                 <span className="sr-only">Loading...</span>
               </div>
             </div>
-            <div className="text-center">
-              <input type="file" id="file" onChange={this.onChange} className='file' hidden></input>
-              <MDBBtn rounded id='upload-btn' className='m-4'>
-                <MDBIcon icon="upload" className='px-1'/>
-                Upload Image
-              </MDBBtn>
+            <div className="text-center" id="name">
+              <MDBInput value={this.state.name} onChange={this.onChange} className='name' label='Preview Name' type='text' />
               <MDBBtn rounded className='m-4' onClick={this.generateLink}>
                 <MDBIcon icon="link" className='px-1'/>
                 Generate Link

@@ -84,15 +84,25 @@
 
 #loader {
   display: none;
-  margin-top: 30px;
 }
 
 #image {
-  width: 80%;
-  height: 60%;
-  max-width: 400px;
-  max-height: 400px;
-  margin-top: 20px;
+  width: 70%;
+  height: 50%;
+  max-width: 300px;
+  max-height: 250px;
+  margin-bottom: 20px;
+}
+
+#image-url {
+  width: 70%;
+  margin: 0 auto;
+}
+
+#name {
+  width: 70%;
+  margin: 20px auto;
+  margin-bottom: 0px;
 }
 
 #social-container a {
