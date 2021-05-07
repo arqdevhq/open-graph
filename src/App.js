@@ -388,7 +388,7 @@ class App extends React.Component {
           <MDBCol md='6' className='left-col'>
             <div id='flex-header'>
               <h1>Create Preview</h1>
-              <MDBBtn rounded className='m-2' id='back-btn'>
+              <MDBBtn className='m-2 btn-rounded' id='back-btn'>
                 <MDBIcon icon="arrow-left" className='px-1'/>
                 Back to Dashboard
               </MDBBtn>
@@ -409,7 +409,7 @@ class App extends React.Component {
             <div className="text-center" id='image-url'>
               <MDBInput value={this.state.image} onChange={this.onChange} className='image' label='Image URL' type='url' />
               <input type="file" id="file" onChange={this.onChange} className='file' hidden></input>
-              <MDBBtn rounded id='upload-btn' className='m-4'>
+              <MDBBtn id='upload-btn' className='m-4 btn-rounded'>
                 <MDBIcon icon="upload" className='px-1'/>
                 Upload Image
               </MDBBtn>
@@ -421,7 +421,7 @@ class App extends React.Component {
             </div>
             <div className="text-center" id="name">
               <MDBInput value={this.state.name} onChange={this.onChange} className='name' label='Preview Name' type='text' />
-              <MDBBtn rounded className='m-4' onClick={this.generateLink}>
+              <MDBBtn className='m-4 btn-rounded' onClick={this.generateLink}>
                 <MDBIcon icon="link" className='px-1'/>
                 Generate Link
               </MDBBtn>
@@ -518,11 +518,11 @@ class App extends React.Component {
               <MDBCol key={index} md="4" className='previewCard'>
                 {item}
                 <div className='text-center'>
-                  <MDBBtn rounded className='card-btn' onClick={() => {this.copyLink(index)}}>
+                  <MDBBtn className='card-btn btn-rounded' onClick={() => {this.copyLink(index)}}>
                     <MDBIcon far icon="copy" className='px-1'/>
                     Copy Link
                   </MDBBtn>
-                  <MDBBtn rounded className='card-btn' onClick={() => {this.removeLink(index)}}>
+                  <MDBBtn className='card-btn btn-rounded' onClick={() => {this.removeLink(index)}}>
                     <MDBIcon far icon='trash-alt' className='px-1'/>
                     Delete Link
                   </MDBBtn>
@@ -531,7 +531,7 @@ class App extends React.Component {
             )}
           </MDBRow>
           <div className='text-center full-height'>
-            <MDBBtn rounded id='create-btn' className='m-4'>
+            <MDBBtn id='create-btn' className='m-4 btn-rounded'>
               <MDBIcon icon="plus" className='px-1'/>
               Create New
             </MDBBtn>
