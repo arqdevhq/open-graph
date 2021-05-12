@@ -11,7 +11,7 @@ import request from 'request';
 
 // MDB React
 import { MDBRow, MDBCol } from 'mdb-react-ui-kit';
-import { MDBInput, MDBInputGroup, MDBIcon } from 'mdb-react-ui-kit';
+import { MDBInput, MDBIcon } from 'mdb-react-ui-kit';
 import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText } from "mdbreact";
 
 class App extends React.Component {
@@ -393,19 +393,18 @@ class App extends React.Component {
                 Back to Dashboard
               </MDBBtn>
             </div>
-            <MDBInputGroup className='input-field'>
-              <MDBInput value={this.state.link} onChange={this.onChange} className='url' label='Destination URL' type='url' />
+            <div className="flex-input">
+              <div className='full-width'>
+                <MDBInput value={this.state.link} onChange={this.onChange} className='url' label='Destination URL' type='url' />
+              </div>
               <MDBBtn outline id='submit-btn' onClick={this.onSubmit}>Submit</MDBBtn>
-            </MDBInputGroup>
+            </div>
             <div className="spinner-border" id="loading" role="status">
               <span className="sr-only">Loading...</span>
             </div>
             <MDBInput value={this.state.title} onChange={this.onChange} className='input-field title' label='Title' type='text' />
             <MDBInput value={this.state.description} onChange={this.onChange} className='input-field description' 
             label='Description' textarea rows={4}/>
-            <div className="text-center">
-              <img src={this.state.image || ""} alt=' does not exist' id='image'></img>
-            </div>
             <div className="text-center" id='image-url'>
               <MDBInput value={this.state.image} onChange={this.onChange} className='image' label='Image URL' type='url' />
               <input type="file" id="file" onChange={this.onChange} className='file' hidden></input>
@@ -513,6 +512,12 @@ class App extends React.Component {
         </MDBRow>
 
         <div className='dashboard'>
+          <div className='text-center full-height'>
+            <MDBBtn id='create-btn' className='m-4 btn-rounded'>
+              <MDBIcon icon="plus" className='px-1'/>
+              Create New
+            </MDBBtn>
+          </div>
           <MDBRow>
             {this.state.card.map((item, index) =>
               <MDBCol key={index} md="4" className='previewCard'>
@@ -530,12 +535,6 @@ class App extends React.Component {
               </MDBCol>
             )}
           </MDBRow>
-          <div className='text-center full-height'>
-            <MDBBtn id='create-btn' className='m-4 btn-rounded'>
-              <MDBIcon icon="plus" className='px-1'/>
-              Create New
-            </MDBBtn>
-          </div>
         </div>
         
       </>  

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
 @media only screen and (min-width: 771px) {
   .left-col {
     width: 50%;
@@ -97,6 +99,11 @@
 #image-url {
   width: 70%;
   margin: 0 auto;
+  margin-top: 70px;
+}
+
+.full-width {
+  width: 90%;
 }
 
 #name {
@@ -153,6 +160,13 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.flex-input {
+  width: 100%;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
 }
 
 .preview-list {
@@ -571,14 +585,17 @@
 }
 
 .builder {
+  font-family: 'Poppins';
   visibility: visible;
   opacity: 1;
   animation: fade 1s;
 }
 
 .dashboard {
+  font-family: 'Poppins';
   background-color: #F7F9FF;
   padding: 50px;
+  padding-top: 0px;
   display: none;
   height: 100vh;
   visibility: visible;
@@ -587,7 +604,7 @@
 }
 
 .full-height {
-  height: 20vh;
+  height: 10vh;
 }
 
 .previewCard {
