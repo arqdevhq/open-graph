@@ -48,13 +48,13 @@ class App extends React.Component {
     //   .then((customToken) => {
     //     // Send token back to client
     //     let access_token = customToken;
-    //     let url = "https://firebasedynamiclinks.googleapis.com/v1/https://voyagersocial.page.link/ubRU/linkStats?durationDays=7";
+    //     let url = "https://cors-anywhere.herokuapp.com/https://firebasedynamiclinks.googleapis.com/v1/https://voyagersocial.page.link/ubRU/linkStats?durationDays=7";
     //     var xhr = new XMLHttpRequest();
     //     xhr.open('GET', url , true);
     //     xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
     //     // const that = this;
     //     xhr.onload = function () {
-    //       var data = JSON.parse(this.responseText);
+    //       var data = this.responseText;
     //       console.log(data);
     //     };
     //     xhr.send(); 
@@ -238,11 +238,11 @@ class App extends React.Component {
 
   generateLink() {
     if (this.state.name === "") {
-      alert('Type preview name');
+      alert('Please type the preview name.');
       document.querySelector('.name').focus();
     }
     else if (this.state.image.length > 1000) {
-      alert('Image URL is too long');
+      alert('Image URL is too long.');
       document.querySelector('.image').focus();
     }
     else {
