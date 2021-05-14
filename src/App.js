@@ -1,6 +1,4 @@
 import React from 'react';
-// default image
-// import coffee from './coffee.jpg';
 
 // HTTP call
 import request from 'request';
