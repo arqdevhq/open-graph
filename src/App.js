@@ -1,6 +1,6 @@
 import React from 'react';
 // default image
-import coffee from './coffee.jpg';
+// import coffee from './coffee.jpg';
 
 // HTTP call
 import request from 'request';
@@ -28,7 +28,7 @@ class App extends React.Component {
       link: "",
       title: "",
       description: "",
-      image: coffee,
+      image: "https://i.imgur.com/eX9IqTW.png",
       domain: "",
       short: "Unavailable",
       card: [],
@@ -188,7 +188,7 @@ class App extends React.Component {
 
     var data = [];
     var that = this;
-    var none = 'https://www.metrorollerdoors.com.au/wp-content/uploads/2018/02/unavailable-image.jpg';
+    var none = 'https://i.imgur.com/eX9IqTW.png';
 
     request('https://urlpreview.vercel.app/api/v1/preview?url='+url, function (error, response, body) {
       // Print the error if one occurred
