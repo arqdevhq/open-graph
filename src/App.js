@@ -149,6 +149,7 @@ class App extends React.Component {
     });
   }
 
+  // when users input or upload image
   onChange(event) {
     if (event.target.classList.contains('url')) {
       this.setState({ link: event.target.value });
@@ -175,6 +176,7 @@ class App extends React.Component {
     }
   }
 
+  // when users submit the URL
   onSubmit(event) {
     event.preventDefault();
 
@@ -188,6 +190,7 @@ class App extends React.Component {
     var that = this;
     var none = 'https://i.imgur.com/eX9IqTW.png';
 
+    // get title, description, image, and domain via API
     request('https://urlpreview.vercel.app/api/v1/preview?url='+url, function (error, response, body) {
       // Print the error if one occurred
       if (error) {
@@ -234,6 +237,7 @@ class App extends React.Component {
     });
   }
 
+  // generate short link
   generateLink() {
     if (this.state.name === "") {
       alert('Please type the preview name.');
@@ -273,6 +277,7 @@ class App extends React.Component {
         }
       });
       
+      // request firebase short link API
       var url = "https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=" + api_key;
       var xhr = new XMLHttpRequest();
       xhr.open('POST', url , true);
@@ -286,6 +291,7 @@ class App extends React.Component {
       };
       xhr.send(bodydata);   
 
+      // component for shorten link card on dashboard
       const setComponents = () => {
         // get today's date
         var today = new Date();
@@ -350,6 +356,7 @@ class App extends React.Component {
     }
   }
 
+  // when users click copy link button
   copyLink(index) {
     var inner = document.querySelectorAll('.shorten-link')[index].innerHTML;
     var input = document.createElement('input');
@@ -360,6 +367,7 @@ class App extends React.Component {
     document.body.removeChild(input);
   }
 
+  // when users click remove link button
   removeLink(index) {
     let list = this.state.card;
     let db = this.state.data;
