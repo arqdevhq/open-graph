@@ -1,5 +1,5 @@
 import React from 'react';
-
+import axios from 'axios'
 // HTTP call
 import request from 'request';
 // analytics api
@@ -182,12 +182,28 @@ class App extends React.Component {
       this.setState({ name: event.target.value });
     }
     else if (event.target.classList.contains('file')) {
-      var reader = new FileReader();
-      var that = this;
-      reader.onload = function (e) {
-        that.setState({ image: e.target.result });
+      var vm = this
+      var file = event.target.files[0]
+      var formData = new FormData();
+      formData.append("image", file);
+
+      var config = {
+        method: 'post',
+        url: `${process.env.REACT_APP_LOOK_LINK_API_BASE_URL}/images/preview-link`,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        data: formData
       };
-      reader.readAsDataURL(event.target.files[0]);
+
+      axios(config)
+        .then(function (response) {
+          console.log(JSON.stringify(response.data.url));
+          vm.setState({ image: response.data.url });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   }
 
