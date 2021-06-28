@@ -276,7 +276,6 @@ class App extends React.Component {
     }
     else if (this.state.image.length > 1000) {
       alert('Image URL is too long.');
-      document.querySelector('.image').focus();
     }
     else {
       document.getElementById('loader').style.display = "block";
