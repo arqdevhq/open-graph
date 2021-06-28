@@ -413,7 +413,7 @@
 
 #instagram-card {
   cursor: pointer;
-  position: relative;
+  /* position: relative; */
   display: flex;
   flex-direction: column;
   border-radius: 22px;
@@ -473,7 +473,7 @@
 #linkedin-card {
   max-width: 527px;
   cursor: pointer;
-  position: relative;
+  /* position: relative; */
   display: block;
   background-color: #fff;
   overflow: hidden;
