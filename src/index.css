@@ -2,37 +2,51 @@
 
 @media only screen and (min-width: 771px) {
   .left-col {
-    width: 50%;
+    width: 50.4% !important;
     position: fixed;
     left: 0;
     top: 0;
-    padding: 20px;
+    /* padding: 20px;
     padding-left: 30px !important;
-    padding-right: 30px !important;
+    padding-right: 30px !important; */
+    padding-left: 0px !important;
   }
   .right-col {
     width: 50%;
     background-color: #F7F9FF;
     margin-left: 50%;
     overflow: auto;
-    padding: 20px;
-    padding-left: 60px !important;
+    /* padding: 20px;
+    padding-left: 60px !important; */
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
   }
   #social-container {
     position: fixed;
-    top: 35%;
-    -webkit-transform: translate(-120%, -50%);
-    -ms-transform: translate(-120%, -50%);
-    transform: translate(-120%, -50%);
+    top: 40%;
+    left: 51.5%;
+    -webkit-transform: translate(-24%, -50%);
+    -ms-transform: translate(-24%, -50%);
+    transform: translate(-24%, -50%);
+    border: 2px solid #4338CA;
+    border-radius: 5px;
+    background-color: white;
+  }
+  #name {
+    position: fixed;
+    bottom: 0;
+    width: 49.4%;
+    padding-inline: 30px;
+    padding-top: 25px;
+    background-color: #4338CA;
   }
 }
 
 @media only screen and (max-width: 770px) {
   .left-col {
-    padding: 20px;
+    /* padding: 20px;
     padding-left: 30px !important;
-    padding-right: 30px !important;
+    padding-right: 30px !important; */
+    padding-left: 0px !important;
   }
   .right-col {
     background-color: #F7F9FF;
@@ -42,22 +56,64 @@
   }
   #social-container {
     position: fixed;
-    top: 35%;
-    -webkit-transform: translate(-120%, -50%);
-    -ms-transform: translate(-120%, -50%);
-    transform: translate(-120%, -50%);
-  }
-  #social-container {
-    position: fixed;
     top: 60%;
+    left: 15%;
     -webkit-transform: translate(-100%, -50%);
     -ms-transform: translate(-100%, -50%);
     transform: translate(-100%, -50%);
+    border: 2px solid #4338CA;
+    border-radius: 5px;
+    background-color: white;
+  }
+  #name {
+    position: relative;
+    width: 100%;
+    padding-inline: 30px;
+    padding-top: 25px;
+    margin-block: 30px;
+    background-color: #4338CA;
   }
 }
 
-.input-field {
-  margin-block: 30px;
+@media only screen and (min-width: 1600px) {
+  .left-col {
+    width: 50.2% !important;
+  }
+  #name {
+    width: 49.6%;
+  }
+}
+
+#flex-header {
+  background-color: #4338CA;
+  border: 15px solid #4338CA; 
+  background-clip:  content-box, padding-box;
+  color: white;
+}
+
+#flex-header-right {
+  background-color: white;
+  border: 15px solid white; 
+  background-clip:  content-box, padding-box;
+  color: #4338CA;
+  transform: translateX(-12px);
+  width: 102%;
+}
+
+.left-margin {
+  padding-inline: 30px;
+}
+
+.blue-header {
+  color: #4338CA;
+  margin-bottom: 5px;
+  margin-top: 30px;
+}
+
+#submit-btn {
+  background-color: #4338CA;
+  color: white;
+  border: 2px solid #4338CA;
 }
 
 .input-group .form-outline {
@@ -106,10 +162,12 @@
   width: 90%;
 }
 
-#name {
-  width: 70%;
-  margin: 20px auto;
-  margin-bottom: 0px;
+#generate-btn {
+  margin-top: 0px !important;
+}
+
+.name {
+  background-color: white !important;
 }
 
 #social-container a {
@@ -123,7 +181,7 @@
 }
 
 #social-container a:hover {
-  background-color: #000;
+  opacity: 0.6;
 }
 
 .facebook {
@@ -158,13 +216,14 @@
 
 #social-preview {
   width: 100%;
+  max-width: 550px;
   display: flex;
   flex-direction: column;
+  margin: auto;
 }
 
 .flex-input {
   width: 100%;
-  margin-top: 30px;
   display: flex;
   flex-direction: row;
 }
@@ -654,8 +713,10 @@
   justify-content: space-between;
 }
 
-#back-btn {
+#back-btn, #generate-btn {
   float: right;
+  color: white;
+  border: 2px solid white;
 }
 
 h5 {

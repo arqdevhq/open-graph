@@ -7,6 +7,17 @@ import request from 'request';
 // import "firebase/auth";
 // import serviceAccount from './key';
 
+import 'react-dropzone-uploader/dist/styles.css'
+import Dropzone from 'react-dropzone-uploader'
+
+// Social Icons
+import Facebook from './icons/Facebook.svg';
+import Instagram from './icons/Instagram.svg';
+import Linkedin from './icons/LinkedIn.svg';
+import Pinterest from './icons/Pinterest.svg';
+import Twitter from './icons/Twitter.svg';
+import Slack from './icons/Slack.png';
+
 // MDB React
 import { MDBRow, MDBCol } from 'mdb-react-ui-kit';
 import { MDBInput, MDBIcon } from 'mdb-react-ui-kit';
@@ -15,6 +26,10 @@ import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText }
 class App extends React.Component {
   constructor(props) {
     super(props);
+
+    this.toast = this.toast.bind(this);
+    this.getUploadParams = this.getUploadParams.bind(this);
+    this.handleChangeStatus = this.handleChangeStatus.bind(this);
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -131,10 +146,10 @@ class App extends React.Component {
       });
     });
 
-    // upload image button
-    document.getElementById('upload-btn').addEventListener('click', function() {
-      document.getElementById('file').click();
-    });
+    // // upload image button
+    // document.getElementById('upload-btn').addEventListener('click', function() {
+    //   document.getElementById('file').click();
+    // });
 
     // create new link button
     document.getElementById('create-btn').addEventListener('click', function() {
@@ -143,10 +158,10 @@ class App extends React.Component {
     });
 
     // back to dashboard button
-    document.getElementById('back-btn').addEventListener('click', function() {
-      document.querySelector('.builder').style.display = 'none';
-      document.querySelector('.dashboard').style.display = 'block';
-    });
+    // document.getElementById('back-btn').addEventListener('click', function() {
+    //   document.querySelector('.builder').style.display = 'none';
+    //   document.querySelector('.dashboard').style.display = 'block';
+    // });
   }
 
   // when users input or upload image
@@ -385,6 +400,32 @@ class App extends React.Component {
       document.querySelector('.dashboard').style.height = '100vh';
     }
   }
+
+  toast = (innerHTML) => {
+    const el = document.getElementById('toast')
+    el.innerHTML = innerHTML
+    el.className = 'show'
+    setTimeout(() => { el.className = el.className.replace('show', '') }, 3000)
+  }
+
+  getUploadParams = ({ file, meta }) => {
+    var reader = new FileReader();
+    var that = this;
+    reader.onload = function (e) {
+      that.setState({ image: e.target.result });
+    };
+    reader.readAsDataURL(file);
+    return { url: 'https://httpbin.org/post' }
+  }
+
+  handleChangeStatus = ({ meta, remove }, status) => {
+    if (status === 'headers_received') {
+      this.toast(`${meta.name} uploaded!`)
+      remove()
+    } else if (status === 'aborted') {
+      this.toast(`${meta.name}, upload failed...`)
+    }
+  }
   
   render() {
     return (
@@ -393,54 +434,84 @@ class App extends React.Component {
         <MDBRow className='builder'>
           <MDBCol md='6' className='left-col'>
             <div id='flex-header'>
-              <h1>Create Preview</h1>
-              <MDBBtn className='m-2 btn-rounded' id='back-btn'>
+              <h1 style={{marginLeft: "15px"}}>Create Look Link</h1>
+              {/* <MDBBtn className='m-2 btn-rounded' id='back-btn'>
                 <MDBIcon icon="arrow-left" className='px-1'/>
                 Back to Dashboard
-              </MDBBtn>
+              </MDBBtn> */}
             </div>
-            <div className="flex-input">
-              <div className='full-width'>
-                <MDBInput value={this.state.link} onChange={this.onChange} className='url' label='Destination URL' type='url' />
+            <div className="left-margin">
+              <p className="blue-header">Desitnation URL</p>
+              <div className="flex-input">
+                <div className='full-width'>
+                  <MDBInput value={this.state.link} onChange={this.onChange} className='url' label='https://www.example.com' type='url' />
+                </div>
+                <MDBBtn outline id='submit-btn' onClick={this.onSubmit}>Submit</MDBBtn>
               </div>
-              <MDBBtn outline id='submit-btn' onClick={this.onSubmit}>Submit</MDBBtn>
-            </div>
-            <div className="spinner-border" id="loading" role="status">
-              <span className="sr-only">Loading...</span>
-            </div>
-            <MDBInput value={this.state.title} onChange={this.onChange} className='input-field title' label='Title' type='text' />
-            <MDBInput value={this.state.description} onChange={this.onChange} className='input-field description' 
-            label='Description' textarea rows={4}/>
-            <div className="text-center" id='image-url'>
-              <MDBInput value={this.state.image} onChange={this.onChange} className='image' label='Image URL' type='url' />
-              <input type="file" id="file" onChange={this.onChange} className='file' hidden></input>
-              <MDBBtn id='upload-btn' className='m-4 btn-rounded'>
-                <MDBIcon icon="upload" className='px-1'/>
-                Upload Image
-              </MDBBtn>
-            </div>
-            <div className="text-center" id="loader">
-              <div className="spinner-border" role="status">
+              <div className="spinner-border" id="loading" role="status">
                 <span className="sr-only">Loading...</span>
               </div>
+              <p className="blue-header">Title</p>
+              <MDBInput value={this.state.title} onChange={this.onChange} className='input-field title' label='Attention Grabbing Headline' type='text' />
+              <p className="blue-header">Description</p>
+              <MDBInput value={this.state.description} onChange={this.onChange} className='input-field description' 
+              textarea rows={4}/>
+              {/* <div className="text-center" id='image-url'>
+                <MDBInput value={this.state.image} onChange={this.onChange} className='image' label='Image URL' type='url' />
+                <input type="file" id="file" onChange={this.onChange} className='file' hidden></input>
+                <MDBBtn id='upload-btn' className='m-4 btn-rounded'>
+                  <MDBIcon icon="upload" className='px-1'/>
+                  Upload Image
+                </MDBBtn>
+              </div> */}
+              <React.Fragment>
+              <p className="blue-header">Upload Image</p>
+                <Dropzone
+                  getUploadParams={this.getUploadParams}
+                  onChangeStatus={this.handleChangeStatus}
+                  maxFiles={1}
+                  multiple={false}
+                  canCancel={false}
+                  inputContent="Upload a file or drag and drop"
+                  styles={{
+                    dropzone: { width: "100%", height: 250 },
+                    dropzoneActive: { borderColor: 'green' },
+                  }}
+                />
+                <div id="toast"></div>
+              </React.Fragment>
+              <div className="text-center" id="loader">
+                <div className="spinner-border" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
             </div>
-            <div className="text-center" id="name">
-              <MDBInput value={this.state.name} onChange={this.onChange} className='name' label='Preview Name' type='text' />
-              <MDBBtn className='m-4 btn-rounded' onClick={this.generateLink}>
-                <MDBIcon icon="link" className='px-1'/>
-                Generate Link
-              </MDBBtn>
+            <div id="name">
+              <p style={{color: "white"}}>Project Name</p>
+              <div className="flex-input">
+                <div style={{width: "63%"}}>
+                  <MDBInput value={this.state.name} onChange={this.onChange} className='name' type='text' />
+                </div>
+                <MDBBtn className='m-4' id="generate-btn" onClick={this.generateLink}>
+                  <MDBIcon icon="link" className='px-1'/>
+                  Generate Link
+                </MDBBtn>
+              </div>
             </div>
           </MDBCol>
           <MDBCol md='6' className='right-col'>
-            <h1>Show Preview</h1>
+            <div id='flex-header-right'>
+              <h1 style={{marginLeft: "15px"}}>Preview Look Link</h1>
+            </div>
             <div id='social-container'>
-              <a href='#facebook' className="facebook social-icon"><i className="fa fa-facebook"></i></a> 
-              <a href='#twitter' className="twitter social-icon"><i className="fa fa-twitter"></i></a> 
-              <a href='#instagram' className="instagram social-icon"><i className="fa fa-instagram"></i></a> 
-              <a href='#linkedin' className="linkedin social-icon"><i className="fa fa-linkedin"></i></a>
-              <a href='#pinterest' className="pinterest social-icon"><i className="fa fa-pinterest"></i></a> 
-              <a href='#slack' className="slack social-icon"><i className="fa fa-slack"></i></a> 
+              <a href='#facebook' className="social-icon"><img src={Facebook}></img></a> 
+              <a href='#twitter' className="social-icon"><img src={Twitter}></img></a>  
+              <a href='#instagram' className="social-icon"><img src={Instagram}></img></a> 
+              <a href='#linkedin' className="social-icon"><img src={Linkedin}></img></a> 
+              <a href='#pinterest' className="social-icon"><img src={Pinterest}></img></a> 
+              <a href='#slack' className="social-icon">
+                <img src={Slack} width="43px" height="43px" 
+                style={{borderRadius: "8px"}}></img></a> 
             </div>
             <div id='social-preview'>
               <div id='facebook' className='preview-list'>
