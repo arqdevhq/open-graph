@@ -102,6 +102,8 @@
 
 .left-margin {
   padding-inline: 30px;
+  overflow-y: scroll !important;
+  max-height: calc(100vh - 230px);
 }
 
 .blue-header {

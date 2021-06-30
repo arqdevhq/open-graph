@@ -181,30 +181,6 @@ class App extends React.Component {
     else if (event.target.classList.contains('name')) {
       this.setState({ name: event.target.value });
     }
-    else if (event.target.classList.contains('file')) {
-      var vm = this
-      var file = event.target.files[0]
-      var formData = new FormData();
-      formData.append("image", file);
-
-      var config = {
-        method: 'post',
-        url: `${process.env.REACT_APP_LOOK_LINK_API_BASE_URL}/images/preview-link`,
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        },
-        data: formData
-      };
-
-      axios(config)
-        .then(function (response) {
-          console.log(JSON.stringify(response.data.url));
-          vm.setState({ image: response.data.url });
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    }
   }
 
   // when users submit the URL
@@ -424,16 +400,31 @@ class App extends React.Component {
   }
 
   getUploadParams = ({ file, meta }) => {
-    var reader = new FileReader();
-    var that = this;
-    reader.onload = function (e) {
-      that.setState({ image: e.target.result });
+    var vm = this
+    var formData = new FormData();
+    formData.append("image", file);
+
+    var config = {
+      method: 'post',
+      url: `${process.env.REACT_APP_LOOK_LINK_API_BASE_URL}/images/preview-link`,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      data: formData
     };
-    reader.readAsDataURL(file);
+
+    axios(config)
+      .then(function (response) {
+        vm.setState({ image: response.data.url });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     return { url: 'https://httpbin.org/post' }
   }
 
   handleChangeStatus = ({ meta, remove }, status) => {
+    console.log("DSFDS");
     if (status === 'headers_received') {
       this.toast(`${meta.name} uploaded!`)
       remove()
