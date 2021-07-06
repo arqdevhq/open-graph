@@ -2,10 +2,6 @@ import React from 'react';
 import axios from 'axios'
 // HTTP call
 import request from 'request';
-// analytics api
-// import admin from 'firebase-admin';
-// import "firebase/auth";
-// import serviceAccount from './key';
 
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
@@ -18,10 +14,24 @@ import Pinterest from './icons/Pinterest.svg';
 import Twitter from './icons/Twitter.svg';
 import Slack from './icons/Slack.png';
 
+// Material Tailwind
+import "@material-tailwind/react/tailwind.css";
+import Card from "@material-tailwind/react/Card";
+import CardImage from "@material-tailwind/react/CardImage";
+import CardBody from "@material-tailwind/react/CardBody";
+import CardFooter from "@material-tailwind/react/CardFooter";
+import H6 from "@material-tailwind/react/Heading6";
+import Paragraph from "@material-tailwind/react/Paragraph";
+import Button from "@material-tailwind/react/Button";
+import "tailwindcss/tailwind.css"
+
+// loading animation
+import spin from "./spin.gif"
+
 // MDB React
-import { MDBRow, MDBCol } from 'mdb-react-ui-kit';
-import { MDBInput, MDBIcon } from 'mdb-react-ui-kit';
-import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText } from "mdbreact";
+// import { MDBRow, MDBCol } from 'mdb-react-ui-kit';
+// import { MDBInput, MDBIcon } from 'mdb-react-ui-kit';
+// import { MDBBtn, MDBCard, MDBCardBody, MDBCardImage, MDBCardTitle, MDBCardText } from "mdbreact";
 
 class App extends React.Component {
   constructor(props) {
@@ -50,31 +60,16 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // Analytics API
-    // const credential = admin.credential.cert(serviceAccount);
-    // credential.getAccessToken();
-    // admin.initializeApp({credential: admin.credential.cert(serviceAccount)});
-    // const uid = 'some-uid';
-    // admin
-    //   .auth()
-    //   .createCustomToken(uid)
-    //   .then((customToken) => {
-    //     // Send token back to client
-    //     let access_token = customToken;
-    //     let url = "https://cors-anywhere.herokuapp.com/https://firebasedynamiclinks.googleapis.com/v1/https://voyagersocial.page.link/ubRU/linkStats?durationDays=7";
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open('GET', url , true);
-    //     xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
-    //     // const that = this;
-    //     xhr.onload = function () {
-    //       var data = this.responseText;
-    //       console.log(data);
-    //     };
-    //     xhr.send(); 
-    //   })
-    //   .catch((error) => {
-    //     console.log('Error creating custom token:', error);
-    //   });
+
+    // const token = "f0eyBlspFIwoXZbI60aqmJBgp0lHqurOS66EKhJTA6ZbQSpEhcOLXBGQxtJFPVYyIIeCcr7TWxGheS1f"
+    // const url = 'https://www.nytimes.com/'
+
+    // const requestUrl = `https://api.opengraphr.com/v1/og?api_token=${token}&url=${encodeURIComponent(url)}`
+    // fetch(requestUrl)
+    //     .then(response => response.json())
+    //     .then(og => {
+    //         console.table(og)
+    //     })
     
     // load data from local storage
     if (localStorage.length !== 0) {
@@ -83,18 +78,15 @@ class App extends React.Component {
         let components = this.state.card;
         let db = this.state.data;
         let element = 
-          <MDBCard cascade>
-            <MDBCardImage
-              cascade
-              className='img-fluid card-image'
-              overlay="white-light"
-              hover
+          <Card>
+            <CardImage
               src= {data[1]}
+              alt="Card Image"
             />
-            <MDBCardBody cascade>
-              <MDBCardTitle>{data[0]}</MDBCardTitle>
+            <CardBody>
+              <H6 color="gray">{data[0]}</H6>
               <hr/>
-              <MDBCardText className='card-caption'>
+              <Paragraph color="gray" className='card-caption'>
                 <span className='card-label'>Title</span>
                 <span className='card-content'>{data[2]}</span>
                 <span className='card-label'>Description</span>
@@ -105,19 +97,23 @@ class App extends React.Component {
                 <a href={data[5]} target='_blank' rel="noreferrer">
                   <span className='card-content shorten-link'>{data[5]}</span>
                 </a>
-              </MDBCardText>
-            </MDBCardBody>
-            <div className='rounded-bottom mdb-color lighten-3 text-center pt-3'>
-              <ul className='list-unstyled list-inline font-small'>
-                <li className='list-inline-item pr-2 white-text'>
-                  <MDBIcon far icon='clock' /> {data[6]}
-                </li>
-                <li className='list-inline-item blue-text pr-2'>
-                  <MDBIcon far icon="hand-point-up" /> 0
-                </li>
-              </ul>
-            </div>
-          </MDBCard>
+              </Paragraph>
+            </CardBody>
+            <CardFooter className="flex-footer">
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {data[6]}
+              </div>
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                </svg>
+                <span style={{marginLeft: "7px"}}> 0</span>
+              </div>
+            </CardFooter>
+          </Card>
         
         components.push(element);
         db.push(JSON.stringify(data));
@@ -145,11 +141,6 @@ class App extends React.Component {
           });
       });
     });
-
-    // // upload image button
-    // document.getElementById('upload-btn').addEventListener('click', function() {
-    //   document.getElementById('file').click();
-    // });
 
     // create new link button
     document.getElementById('create-btn').addEventListener('click', function() {
@@ -311,18 +302,15 @@ class App extends React.Component {
         let short = this.state.short;
         
         let element = 
-          <MDBCard cascade>
-            <MDBCardImage
-              cascade
-              className='img-fluid card-image'
-              overlay="white-light"
-              hover
+          <Card>
+            <CardImage
+              alt="Card Image"
               src= {si}
             />
-            <MDBCardBody cascade>
-              <MDBCardTitle>{name}</MDBCardTitle>
+            <CardBody>
+              <H6 color="gray">{name}</H6>
               <hr/>
-              <MDBCardText className='card-caption'>
+              <Paragraph color="gray" className='card-caption'>
                 <span className='card-label'>Title</span>
                 <span className='card-content'>{st}</span>
                 <span className='card-label'>Description</span>
@@ -333,19 +321,23 @@ class App extends React.Component {
                 <a href={short} target='_blank' rel="noreferrer">
                   <span className='card-content shorten-link'>{short}</span>
                 </a>
-              </MDBCardText>
-            </MDBCardBody>
-            <div className='rounded-bottom mdb-color lighten-3 text-center pt-3'>
-              <ul className='list-unstyled list-inline font-small'>
-                <li className='list-inline-item pr-2 white-text'>
-                  <MDBIcon far icon='clock' /> {today}
-                </li>
-                <li className='list-inline-item blue-text pr-2'>
-                  <MDBIcon far icon="hand-point-up" /> 0
-                </li>
-              </ul>
-            </div>
-          </MDBCard>
+              </Paragraph>
+            </CardBody>
+            <CardFooter className="flex-footer">
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {today}
+              </div>
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                </svg>
+                <span style={{marginLeft: "7px"}}> 0</span>
+              </div>
+            </CardFooter>
+          </Card>
 
         components.push(element);
         let arr = [name, si, st, sd, link, short, today];
@@ -437,10 +429,10 @@ class App extends React.Component {
     return (
       <>
         
-        <MDBRow className='builder'>
-          <MDBCol md='6' className='left-col'>
+        <div className='re-row builder'>
+          <div className='re-col-md-6 left-col'>
             <div id='flex-header'>
-              <h1 style={{marginLeft: "15px"}}>Create Look Link</h1>
+              <h1 style={{marginLeft: "15px", fontSize: "30px"}}>Create Look Link</h1>
               {/* <MDBBtn className='m-2 btn-rounded' id='back-btn'>
                 <MDBIcon icon="arrow-left" className='px-1'/>
                 Back to Dashboard
@@ -448,28 +440,53 @@ class App extends React.Component {
             </div>
             <div className="left-margin">
               <p className="blue-header">Desitnation URL</p>
-              <div className="flex-input">
+
+              <div className="flex items-center justify-center bg-white">
+                <div className="w-full mx-auto"><div>
+                <div className="mt-1 flex rounded-md shadow-sm">
+                  <div className="input-border relative flex items-stretch flex-grow focus-within:z-10">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
+                    <input type="url" className="url focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded rounded-l-md pl-10 sm:text-sm border-1 border-gray-500" placeholder="   https://www.example.com"
+                      value={this.state.link} onChange={this.onChange}></input>
+                  </div>
+                  <button className="rounded -ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                      id='submit-btn' onClick={this.onSubmit}>
+                    <span>Submit</span>
+                  </button>
+                </div>
+              </div>
+                </div>
+              </div>
+
+              {/* <div className="flex-input">
                 <div className='full-width'>
                   <MDBInput value={this.state.link} onChange={this.onChange} className='url' label='https://www.example.com' type='url' />
                 </div>
                 <MDBBtn outline id='submit-btn' onClick={this.onSubmit}>Submit</MDBBtn>
-              </div>
-              <div className="spinner-border" id="loading" role="status">
-                <span className="sr-only">Loading...</span>
-              </div>
-              <p className="blue-header">Title</p>
-              <MDBInput value={this.state.title} onChange={this.onChange} className='input-field title' label='Attention Grabbing Headline' type='text' />
-              <p className="blue-header">Description</p>
-              <MDBInput value={this.state.description} onChange={this.onChange} className='input-field description' 
-              textarea rows={4}/>
-              {/* <div className="text-center" id='image-url'>
-                <MDBInput value={this.state.image} onChange={this.onChange} className='image' label='Image URL' type='url' />
-                <input type="file" id="file" onChange={this.onChange} className='file' hidden></input>
-                <MDBBtn id='upload-btn' className='m-4 btn-rounded'>
-                  <MDBIcon icon="upload" className='px-1'/>
-                  Upload Image
-                </MDBBtn>
               </div> */}
+              <img src={spin} id="loading" width="100px" height="100px"></img>
+              {/* <div className="spinner-border" id="loading" role="status">
+                <span className="sr-only">Loading...</span>
+              </div> */}
+              <p className="blue-header">Title</p>
+
+              <div className="w-full mx-auto"><div>
+              <div className="mt-1 flex rounded-md shadow-sm">
+                <div className="relative flex items-stretch flex-grow focus-within:z-10">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
+                  <input type="text" className="title py-1 input-border focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded rounded-l-md pl-10 sm:text-sm border-1 border-gray-500" placeholder="   Attention Grabbing Headline"
+                    value={this.state.title} onChange={this.onChange}></input>
+                </div>
+              </div>
+              </div>
+              </div>
+
+              {/* <MDBInput value={this.state.title} onChange={this.onChange} className='input-field title' label='Attention Grabbing Headline' type='text' /> */}
+              <p className="blue-header">Description</p>
+              {/* <MDBInput value={this.state.description} onChange={this.onChange} className='input-field description' 
+              textarea rows={4}/> */}
+              <textarea className="description resize-y py-1 border rounded-md w-full h-24 focus:ring-indigo-500 focus:border-indigo-500 border-2 border-gray-500"
+              value={this.state.description} onChange={this.onChange}></textarea>
               <React.Fragment>
               <p className="blue-header">Upload Image</p>
                 <Dropzone
@@ -480,34 +497,42 @@ class App extends React.Component {
                   canCancel={false}
                   inputContent="Upload a file or drag and drop"
                   styles={{
-                    dropzone: { width: "100%", height: 250 },
+                    dropzone: { width: "100%", height: 200 },
                     dropzoneActive: { borderColor: 'green' },
                   }}
                 />
                 <div id="toast"></div>
               </React.Fragment>
-              <div className="text-center" id="loader">
-                <div className="spinner-border" role="status">
-                  <span className="sr-only">Loading...</span>
-                </div>
-              </div>
+              <img src={spin} id="loader" width="100px" height="100px"></img>
+              {/* <div className="spinner-border" role="status">
+                <span className="sr-only">Loading...</span>
+              </div> */}
             </div>
             <div id="name">
               <p style={{color: "white"}}>Project Name</p>
               <div className="flex-input">
                 <div style={{width: "63%"}}>
-                  <MDBInput value={this.state.name} onChange={this.onChange} className='name' type='text' />
+                  <input type="text" className="name py-1 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded rounded-l-md pl-10 sm:text-sm border-1 border-gray-500"
+                    value={this.state.name} onChange={this.onChange}></input>
+                  {/* <MDBInput value={this.state.name} onChange={this.onChange} className='name' type='text' /> */}
                 </div>
-                <MDBBtn className='m-4' id="generate-btn" onClick={this.generateLink}>
+                {/* <MDBBtn className='m-4' id="generate-btn" onClick={this.generateLink}>
                   <MDBIcon icon="link" className='px-1'/>
                   Generate Link
-                </MDBBtn>
+                </MDBBtn> */}
+                <button className="m-4 rounded -ml-px inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                    id='generate-btn' onClick={this.generateLink}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clipRule="evenodd" />
+                  </svg>
+                  <span>Generate Link</span>
+                </button>
               </div>
             </div>
-          </MDBCol>
-          <MDBCol md='6' className='right-col'>
+          </div>
+          <div className='re-col-md-6 right-col'>
             <div id='flex-header-right'>
-              <h1 style={{marginLeft: "15px"}}>Preview Look Link</h1>
+              <h1 style={{marginLeft: "15px", fontSize: "30px"}}>Preview Look Link</h1>
             </div>
             <div id='social-container'>
               <a href='#facebook' className="social-icon"><img src={Facebook}></img></a> 
@@ -591,33 +616,55 @@ class App extends React.Component {
                 </div>
               </div>
             </div>
-          </MDBCol>
-        </MDBRow>
+          </div>
+        </div>
 
         <div className='dashboard'>
           <div className='text-center full-height'>
-            <MDBBtn id='create-btn' className='m-4 btn-rounded'>
+            {/* <MDBBtn id='create-btn' className='m-4 btn-rounded'>
               <MDBIcon icon="plus" className='px-1'/>
               Create New
-            </MDBBtn>
+            </MDBBtn> */}
+            <button className="dashboard-btn rounded -ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                id='create-btn'>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="white">
+                <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+              </svg>    
+              <span style={{ color:'white' }}>Create New</span>
+            </button>
           </div>
-          <MDBRow>
+          <div className='re-row'>
             {this.state.card.map((item, index) =>
-              <MDBCol key={index} md="4" className='previewCard'>
+              <div className='re-col-md-4' key={index} className='previewCard'>
                 {item}
                 <div className='text-center'>
-                  <MDBBtn className='card-btn btn-rounded' onClick={() => {this.copyLink(index)}}>
+                  {/* <MDBBtn className='card-btn btn-rounded' onClick={() => {this.copyLink(index)}}>
                     <MDBIcon far icon="copy" className='px-1'/>
                     Copy Link
-                  </MDBBtn>
-                  <MDBBtn className='card-btn btn-rounded' onClick={() => {this.removeLink(index)}}>
+                  </MDBBtn> */}
+                  <button className="dashboard-btn card-btn rounded -ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                      id='create-btn' onClick={() => {this.copyLink(index)}}>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="white">
+                      <path d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z" />
+                      <path d="M3 8a2 2 0 012-2v10h8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+                    </svg>
+                    <span style={{ color:'white', marginLeft:'4px' }}>Copy Link</span>
+                  </button>
+                  {/* <MDBBtn className='card-btn btn-rounded' onClick={() => {this.removeLink(index)}}>
                     <MDBIcon far icon='trash-alt' className='px-1'/>
                     Delete Link
-                  </MDBBtn>
+                  </MDBBtn> */}
+                  <button className="dashboard-btn card-btn rounded -ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                      id='create-btn' onClick={() => {this.removeLink(index)}}>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="white">
+                      <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    <span style={{ color:'white', marginLeft:'4px' }}>Delete Link</span>
+                  </button>
                 </div>
-              </MDBCol>
+              </div>
             )}
-          </MDBRow>
+          </div>
         </div>
         
       </>  

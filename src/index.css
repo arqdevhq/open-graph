@@ -1,5 +1,34 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins');
 
+.re-row {
+  --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc( var(--bs-gutter-y) * -1 );
+  margin-right: calc( var(--bs-gutter-x) / -2 );
+  margin-left: calc( var(--bs-gutter-x) / -2 );
+}
+
+.re-row>* {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  padding-right: calc( var(--bs-gutter-x) / 2 );
+  padding-left: calc( var(--bs-gutter-x) / 2 );
+  margin-top: var(--bs-gutter-y);
+}
+
+.re-col-md-6 {
+  flex: 0 0 auto;
+  width: 50%;
+}
+
+.re-col-md-4 {
+  flex: 0 0 auto;
+  width: 33%;
+}
+
 @media only screen and (min-width: 771px) {
   .left-col {
     width: 50.4% !important;
@@ -36,7 +65,7 @@
     bottom: 0;
     width: 49.4%;
     padding-inline: 30px;
-    padding-top: 25px;
+    padding-block: 25px;
     background-color: #4338CA;
   }
 }
@@ -87,7 +116,6 @@
 #flex-header {
   background-color: #4338CA;
   border: 15px solid #4338CA; 
-  background-clip:  content-box, padding-box;
   color: white;
 }
 
@@ -102,7 +130,6 @@
 
 .left-margin {
   padding-inline: 30px;
-  overflow-y: scroll !important;
   max-height: calc(100vh - 230px);
 }
 
@@ -140,10 +167,13 @@
 #loading {
   display: none;
   margin: 0 auto;
+  margin-top: 10px;
 }
 
 #loader {
   display: none;
+  margin: 0 auto;
+  margin-top: 10px;
 }
 
 #image {
@@ -228,6 +258,14 @@
   width: 100%;
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+}
+
+.flex-footer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 .preview-list {
@@ -658,7 +696,8 @@
   padding: 50px;
   padding-top: 0px;
   display: none;
-  height: 100vh;
+  height: 100%;
+  min-height: 100vh;
   visibility: visible;
   opacity: 1;
   animation: fade 1s;
@@ -666,9 +705,11 @@
 
 .full-height {
   height: 10vh;
+  padding-top: 16px;
 }
 
 .previewCard {
+  width: 33.33%;
   margin-bottom: 50px;
   visibility: visible;
   opacity: 1;
@@ -754,4 +795,19 @@ h5:after {
   100% {
       opacity: 1;
   }
+}
+
+.dzu-dropzone {
+  overflow: auto !important;
+}
+
+.input-border {
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+.dashboard-btn {
+  background-color: #4338CA;
+  color: white;
+  border: 2px solid #4338CA;
 }
