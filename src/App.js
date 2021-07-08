@@ -23,10 +23,16 @@ import CardFooter from "@material-tailwind/react/CardFooter";
 import H6 from "@material-tailwind/react/Heading6";
 import Paragraph from "@material-tailwind/react/Paragraph";
 import Button from "@material-tailwind/react/Button";
+import Checkbox from "@material-tailwind/react/Checkbox"
 import "tailwindcss/tailwind.css"
 
 // loading animation
 import spin from "./spin.gif"
+import loading from "./loading.gif"
+
+// Sliding Panel
+import SlidingPane from "react-sliding-pane";
+import "react-sliding-pane/dist/react-sliding-pane.css";
 
 // MDB React
 // import { MDBRow, MDBCol } from 'mdb-react-ui-kit';
@@ -46,6 +52,9 @@ class App extends React.Component {
     this.generateLink = this.generateLink.bind(this);
     this.copyLink = this.copyLink.bind(this);
     this.removeLink = this.removeLink.bind(this);
+
+    this.requestImage = this.requestImage.bind(this);
+    
     this.state = {
       name: "",
       link: "",
@@ -55,7 +64,15 @@ class App extends React.Component {
       domain: "",
       short: "Unavailable",
       card: [],
-      data: []
+      data: [],
+
+      panel: false,
+      tg_size: 40,
+      tg_title: "This is your title",
+      tg_text: "And this is your secondary text",
+      tg_background: "",
+      tg_overlay: false,
+      tg_footer: "voyagersocial.com",
     };
   }
 
@@ -172,6 +189,25 @@ class App extends React.Component {
     else if (event.target.classList.contains('name')) {
       this.setState({ name: event.target.value });
     }
+
+    else if (event.target.classList.contains('tg-size')) {
+      this.setState({ tg_size: event.target.value });
+    }
+    else if (event.target.classList.contains('tg-title')) {
+      this.setState({ tg_title: event.target.value });
+    }
+    else if (event.target.classList.contains('tg-text')) {
+      this.setState({ tg_text: event.target.value });
+    }
+    else if (event.target.classList.contains('tg-background')) {
+      this.setState({ tg_background: event.target.value });
+    }
+    else if (event.target.classList.contains('tg-overlay')) {
+      this.setState({ tg_overlay: event.target.value });
+    }
+    else if (event.target.classList.contains('tg-footer')) {
+      this.setState({ tg_footer: event.target.value });
+    }
   }
 
   // when users submit the URL
@@ -221,10 +257,10 @@ class App extends React.Component {
       }
       // if image does not exist, show preset no image
       if (!data.image) {
-        that.setState({ image: none });
+        that.setState({ image: none, tg_background: none });
       }
       else {
-        that.setState({ image: data.image });
+        that.setState({ image: data.image, tg_background: data.image });
       }
       // if domain does not exist, extract hostname from link
       if (!that.state.domain) {
@@ -407,7 +443,7 @@ class App extends React.Component {
 
     axios(config)
       .then(function (response) {
-        vm.setState({ image: response.data.url });
+        vm.setState({ image: response.data.url, tg_background: response.data.url });
       })
       .catch(function (error) {
         console.log(error);
@@ -423,6 +459,27 @@ class App extends React.Component {
     } else if (status === 'aborted') {
       this.toast(`${meta.name}, upload failed...`)
     }
+  }
+
+  requestImage() {
+    this.setState({ image: loading });
+
+    let size = this.state.tg_size;
+    let title = this.state.tg_title;
+    let text = this.state.tg_text;
+    let background = this.state.tg_background;
+    let overlay = this.state.tg_overlay;
+    if (this.state.tg_overlay) {
+      overlay = 1;
+    }
+    else { overlay = 0 }
+    let footer = this.state.tg_footer;
+
+    const requestURL = `https://og.tailgraph.com/og?baseFontSize=${size}&title=${title}&text=${text}&bgUrl=${background}&overlay=${overlay}&footer=${footer}`
+    fetch(requestURL)
+      .then(response => {
+        this.setState({ image: response.url });
+      })
   }
   
   render() {
@@ -503,6 +560,91 @@ class App extends React.Component {
                 />
                 <div id="toast"></div>
               </React.Fragment>
+              <Button onClick={() => this.setState({ panel: true })} style={{marginTop: "10px", float: "right"}}>Customize Image</Button>
+              <SlidingPane
+                closeIcon={<Button onClick={() => this.setState({ panel: false })}>Close</Button>}
+                isOpen={this.state.panel}
+                title="Customize your OG image"
+                from="left"
+                width="50%"
+                onRequestClose={() => this.setState({ panel: false })}
+              >
+                <p className="blue-header">Font Size</p>
+
+                <div className="w-20"><div>
+                <div className="mt-1 flex rounded-md shadow-sm">
+                  <div className="relative flex items-stretch flex-grow focus-within:z-10">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
+                    <input type="number" className="tg-size py-1 input-border focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded rounded-l-md pl-10 sm:text-sm border-1 border-gray-500"
+                      value={this.state.tg_size} onChange={this.onChange} onClick={this.requestImage}></input>
+                  </div>
+                </div>
+                </div>
+                </div>
+
+                <p className="blue-header">Title</p>
+
+                <div className="w-full mx-auto"><div>
+                <div className="mt-1 flex rounded-md shadow-sm">
+                  <div className="relative flex items-stretch flex-grow focus-within:z-10">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
+                    <input type="text" className="tg-title py-1 input-border focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded rounded-l-md pl-10 sm:text-sm border-1 border-gray-500"
+                      value={this.state.tg_title} onChange={this.onChange} onClick={this.requestImage}></input>
+                  </div>
+                </div>
+                </div>
+                </div>
+
+                <p className="blue-header">Text</p>
+
+                <div className="w-full mx-auto"><div>
+                <div className="mt-1 flex rounded-md shadow-sm">
+                  <div className="relative flex items-stretch flex-grow focus-within:z-10">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
+                    <input type="text" className="tg-text py-1 input-border focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded rounded-l-md pl-10 sm:text-sm border-1 border-gray-500"
+                      value={this.state.tg_text} onChange={this.onChange} onClick={this.requestImage}></input>
+                  </div>
+                </div>
+                </div>
+                </div>
+
+                <p className="blue-header">Background</p>
+
+                <div className="w-full mx-auto"><div>
+                <div className="mt-1 flex rounded-md shadow-sm">
+                  <div className="relative flex items-stretch flex-grow focus-within:z-10">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
+                    <input type="text" className="tg-background py-1 input-border focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded rounded-l-md pl-10 sm:text-sm border-1 border-gray-500"
+                      value={this.state.tg_background} onChange={this.onChange} onClick={this.requestImage}></input>
+                  </div>
+                </div>
+                </div>
+                </div>
+
+                <p className="blue-header">Overlay</p>
+
+                <Checkbox
+                  color="lightBlue"
+                  text="Overlay"
+                  id="checkbox"
+                  value={this.state.tg_overlay}
+                  onChange={this.onChange}
+                  onClick={this.requestImage}
+                />
+
+                <p className="blue-header">Footer</p>
+
+                <div className="w-full mx-auto"><div>
+                <div className="mt-1 flex rounded-md shadow-sm">
+                  <div className="relative flex items-stretch flex-grow focus-within:z-10">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"></div>
+                    <input type="text" className="tg-footer py-1 input-border focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded rounded-l-md pl-10 sm:text-sm border-1 border-gray-500"
+                      value={this.state.tg_footer} onChange={this.onChange} onClick={this.requestImage}></input>
+                  </div>
+                </div>
+                </div>
+                </div>
+              </SlidingPane>
               <img src={spin} id="loader" width="100px" height="100px"></img>
               {/* <div className="spinner-border" role="status">
                 <span className="sr-only">Loading...</span>
